@@ -1,21 +1,21 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ExperienceService } from '../../../services/experience';
+import { CompetenceService } from '../../../services/competence';
 
 @Component({
-  selector: 'app-experience-list',
+  selector: 'app-competence-list',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './experience-list.html',
-  styleUrl: './experience-list.css'
+  templateUrl: './competence-list.html',
+  styleUrl: './competence-list.css'
 })
-export class ExperienceList implements OnInit {
+export class CompetenceList implements OnInit {
 
-  private experienceService = inject(ExperienceService);
+  private competenceService = inject(CompetenceService);
   private cdr = inject(ChangeDetectorRef);
 
-  experiences: any[] = [];
+  competences: any[] = [];
   error: string | null = null;
 
   // ===== TOAST =====
@@ -25,19 +25,18 @@ export class ExperienceList implements OnInit {
   showModal = false;
   modalLoading = false;
   modalError = '';
-  newExperience = { poste: '', adress_exp: '', date_exp: '' };
+  newCompetence = { nom_comp: '' };
 
   // ===== MODAL EDIT =====
   showEditModal = false;
   editModalLoading = false;
   editModalError = '';
-  editExperience = { exp_id: 0, poste: '', adress_exp: '', date_exp: '' };
+  editCompetence = { competence_id: 0, nom_comp: '' };
 
   ngOnInit(): void {
-    this.loadExperiences();
+    this.loadCompetences();
   }
 
-  // ===== TOAST =====
   showToast(message: string, type: 'success' | 'error'): void {
     this.toast = { message, type };
     this.cdr.detectChanges();
@@ -47,12 +46,11 @@ export class ExperienceList implements OnInit {
     }, 3000);
   }
 
-  // ===== CHARGER =====
-  loadExperiences(): void {
+  loadCompetences(): void {
     this.error = null;
-    this.experienceService.getExperiences().subscribe({
+    this.competenceService.getCompetences().subscribe({
       next: (data: any) => {
-        this.experiences = data.data ?? data;
+        this.competences = data.data ?? data;
         this.cdr.detectChanges();
       },
       error: (err: any) => {
@@ -64,45 +62,33 @@ export class ExperienceList implements OnInit {
     });
   }
 
-  // ===== MODAL AJOUT =====
   openModal(): void {
     this.showModal = true;
     this.modalError = '';
-    this.newExperience = { poste: '', adress_exp: '', date_exp: '' };
+    this.newCompetence = { nom_comp: '' };
   }
 
   closeModal(): void {
     this.showModal = false;
     this.modalError = '';
     this.modalLoading = false;
-    this.newExperience = { poste: '', adress_exp: '', date_exp: '' };
+    this.newCompetence = { nom_comp: '' };
   }
 
-  submitExperience(): void {
+  submitCompetence(): void {
     this.modalError = '';
-
-    if (!this.newExperience.poste.trim()) {
-      this.modalError = 'Le poste est obligatoire.';
+    if (!this.newCompetence.nom_comp.trim()) {
+      this.modalError = 'Le nom de la compétence est obligatoire.';
       return;
     }
-    if (!this.newExperience.adress_exp.trim()) {
-      this.modalError = 'L\'adresse de l\'entreprise est obligatoire.';
-      return;
-    }
-    if (!this.newExperience.date_exp) {
-      this.modalError = 'La date est obligatoire.';
-      return;
-    }
-
     this.modalLoading = true;
-
-    this.experienceService.createExperience(this.newExperience).subscribe({
+    this.competenceService.createCompetence(this.newCompetence).subscribe({
       next: (response: any) => {
-        this.experiences.push(response.data ?? response);
+        this.competences.push(response.data ?? response);
         this.modalLoading = false;
         this.cdr.detectChanges();
         this.closeModal();
-        this.showToast('✅ Expérience ajoutée avec succès !', 'success');
+        this.showToast('✅ Compétence ajoutée avec succès !', 'success');
       },
       error: (err: any) => {
         this.modalLoading = false;
@@ -116,13 +102,10 @@ export class ExperienceList implements OnInit {
     });
   }
 
-  // ===== MODAL EDIT =====
-  openEditModal(experience: any): void {
-    this.editExperience = {
-      exp_id: experience.exp_id,
-      poste: experience.poste,
-      adress_exp: experience.adress_exp,
-      date_exp: experience.date_exp
+  openEditModal(competence: any): void {
+    this.editCompetence = {
+      competence_id: competence.competence_id,
+      nom_comp: competence.nom_comp
     };
     this.showEditModal = true;
     this.editModalError = '';
@@ -132,41 +115,28 @@ export class ExperienceList implements OnInit {
     this.showEditModal = false;
     this.editModalError = '';
     this.editModalLoading = false;
-    this.editExperience = { exp_id: 0, poste: '', adress_exp: '', date_exp: '' };
+    this.editCompetence = { competence_id: 0, nom_comp: '' };
   }
 
-  submitEditExperience(): void {
+  submitEditCompetence(): void {
     this.editModalError = '';
-
-    if (!this.editExperience.poste.trim()) {
-      this.editModalError = 'Le poste est obligatoire.';
+    if (!this.editCompetence.nom_comp.trim()) {
+      this.editModalError = 'Le nom de la compétence est obligatoire.';
       return;
     }
-    if (!this.editExperience.adress_exp.trim()) {
-      this.editModalError = 'L\'adresse de l\'entreprise est obligatoire.';
-      return;
-    }
-    if (!this.editExperience.date_exp) {
-      this.editModalError = 'La date est obligatoire.';
-      return;
-    }
-
     this.editModalLoading = true;
-
-    this.experienceService.updateExperience(this.editExperience.exp_id, {
-      poste: this.editExperience.poste,
-      adress_exp: this.editExperience.adress_exp,
-      date_exp: this.editExperience.date_exp
+    this.competenceService.updateCompetence(this.editCompetence.competence_id, {
+      nom_comp: this.editCompetence.nom_comp
     }).subscribe({
       next: (response: any) => {
-        const index = this.experiences.findIndex((e: any) => e.exp_id === this.editExperience.exp_id);
+        const index = this.competences.findIndex((c: any) => c.competence_id === this.editCompetence.competence_id);
         if (index !== -1) {
-          this.experiences[index] = response.data ?? this.editExperience;
+          this.competences[index] = response.data ?? this.editCompetence;
         }
         this.editModalLoading = false;
         this.cdr.detectChanges();
         this.closeEditModal();
-        this.showToast('✅ Expérience modifiée avec succès !', 'success');
+        this.showToast('✅ Compétence modifiée avec succès !', 'success');
       },
       error: (err: any) => {
         this.editModalLoading = false;
@@ -180,14 +150,13 @@ export class ExperienceList implements OnInit {
     });
   }
 
-  // ===== SUPPRIMER =====
-  deleteExperience(id: number): void {
-    if (confirm('Voulez-vous vraiment supprimer cette expérience ?')) {
-      this.experienceService.deleteExperience(id).subscribe({
+  deleteCompetence(id: number): void {
+    if (confirm('Voulez-vous vraiment supprimer cette compétence ?')) {
+      this.competenceService.deleteCompetence(id).subscribe({
         next: () => {
-          this.experiences = this.experiences.filter((e: any) => e.exp_id !== id);
+          this.competences = this.competences.filter((c: any) => c.competence_id !== id);
           this.cdr.detectChanges();
-          this.showToast('🗑️ Expérience supprimée avec succès !', 'success');
+          this.showToast('🗑️ Compétence supprimée avec succès !', 'success');
         },
         error: (err: any) => {
           this.showToast('❌ Erreur lors de la suppression.', 'error');

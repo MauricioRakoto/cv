@@ -20,22 +20,22 @@
   <div class="flex flex-col md:flex-row justify-between items-end md:items-center mb-10 gap-4">
     <div>
       <div class="flex items-center space-x-3 mb-1">
-        <div class="p-2 bg-yellow-500/10 rounded-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+        <div class="p-2 bg-pink-500/10 rounded-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-        <h1 class="text-3xl font-black text-gray-900 tracking-tight">Qualités</h1>
+        <h1 class="text-3xl font-black text-gray-900 tracking-tight">Loisirs</h1>
       </div>
-      <p class="text-gray-500 font-medium ml-11">Vos qualités personnelles et professionnelles</p>
+      <p class="text-gray-500 font-medium ml-11">Vos activités et centres d'intérêt</p>
     </div>
 
     <button (click)="openModal()"
-            class="flex items-center space-x-2 bg-yellow-500 hover:bg-yellow-600 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 shadow-[0_10px_20px_rgba(234,179,8,0.2)] active:scale-95">
+            class="flex items-center space-x-2 bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 shadow-[0_10px_20px_rgba(236,72,153,0.2)] active:scale-95">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" />
       </svg>
-      <span>Ajouter une qualité</span>
+      <span>Ajouter un loisir</span>
     </button>
   </div>
 
@@ -48,7 +48,7 @@
       </svg>
       <p class="font-semibold">{{ error }}</p>
     </div>
-    <button (click)="loadQualites()"
+    <button (click)="loadLoisirs()"
             class="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-lg text-sm font-bold transition">
       🔄 Réessayer
     </button>
@@ -61,31 +61,30 @@
         <thead class="bg-gray-50/80 border-b border-gray-100">
         <tr>
           <th class="px-8 py-5 text-left text-xs font-black text-gray-400 uppercase tracking-widest">#</th>
-          <th class="px-8 py-5 text-left text-xs font-black text-gray-400 uppercase tracking-widest">Qualité</th>
+          <th class="px-8 py-5 text-left text-xs font-black text-gray-400 uppercase tracking-widest">Loisir</th>
           <th class="px-8 py-5 text-center text-xs font-black text-gray-400 uppercase tracking-widest">Actions</th>
         </tr>
         </thead>
-
         <tbody class="divide-y divide-gray-50">
 
         <!-- CAS VIDE -->
-        <tr *ngIf="qualites.length === 0">
+        <tr *ngIf="loisirs.length === 0">
           <td colspan="3" class="px-6 py-20 text-center">
             <div class="flex flex-col items-center max-w-xs mx-auto text-gray-400">
               <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mb-4">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <h3 class="text-lg font-bold text-gray-900 italic">Aucune qualité trouvée</h3>
+              <h3 class="text-lg font-bold text-gray-900 italic">Aucun loisir trouvé</h3>
               <p class="text-sm mt-1">Cliquez sur "Ajouter" pour enrichir votre CV.</p>
             </div>
           </td>
         </tr>
 
-        <!-- BOUCLE DONNÉES -->
-        <tr *ngFor="let qualite of qualites; let i = index"
-            class="group hover:bg-yellow-50/30 transition duration-200">
+        <!-- BOUCLE -->
+        <tr *ngFor="let loisir of loisirs; let i = index"
+            class="group hover:bg-pink-50/30 transition duration-200">
 
           <td class="px-8 py-5 font-bold text-gray-300 text-sm">
             {{ (i + 1).toString().padStart(2, '0') }}
@@ -93,22 +92,22 @@
 
           <td class="px-8 py-5">
             <div class="flex items-center space-x-4">
-              <div class="w-10 h-10 rounded-xl bg-yellow-500 text-white flex items-center justify-center font-black shadow-sm group-hover:scale-110 transition duration-300">
-                {{ qualite.nom_qualite.charAt(0).toUpperCase() }}
+              <div class="w-10 h-10 rounded-xl bg-pink-500 text-white flex items-center justify-center font-black shadow-sm group-hover:scale-110 transition duration-300">
+                {{ loisir.nom_loisirs.charAt(0).toUpperCase() }}
               </div>
-              <span class="font-bold text-gray-900 tracking-tight">{{ qualite.nom_qualite }}</span>
+              <span class="font-bold text-gray-900 tracking-tight">{{ loisir.nom_loisirs }}</span>
             </div>
           </td>
 
           <td class="px-8 py-5 text-center">
             <div class="flex justify-center space-x-2">
-              <button (click)="openEditModal(qualite)"
+              <button (click)="openEditModal(loisir)"
                       class="p-2 text-gray-400 hover:text-amber-500 hover:bg-amber-50 rounded-lg transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                 </svg>
               </button>
-              <button (click)="deleteQualite(qualite.qualite_id)"
+              <button (click)="deleteLoisir(loisir.loisirs_id)"
                       class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -122,15 +121,14 @@
       </table>
     </div>
 
-    <!-- FOOTER TABLE -->
+    <!-- FOOTER -->
     <div class="px-8 py-4 bg-gray-50/50 border-t border-gray-100 flex justify-between items-center text-[10px] font-black text-gray-400 uppercase tracking-widest">
       <span>Statistiques</span>
       <span class="text-gray-700 bg-white px-3 py-1 rounded border shadow-sm">
-        {{ qualites.length }} Entrée(s)
+        {{ loisirs.length }} Entrée(s)
       </span>
     </div>
   </div>
-
 </div>
 
 <!-- ===== MODAL AJOUT ===== -->
@@ -140,14 +138,14 @@
 
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center space-x-3">
-        <div class="p-2.5 bg-yellow-500/10 rounded-xl">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-yellow-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+        <div class="p-2.5 bg-pink-500/10 rounded-xl">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
         <div>
-          <h2 class="text-xl font-black text-gray-900">Nouvelle Qualité</h2>
-          <p class="text-gray-400 text-sm">Ajoutez une qualité à votre profil</p>
+          <h2 class="text-xl font-black text-gray-900">Nouveau Loisir</h2>
+          <p class="text-gray-400 text-sm">Ajoutez un loisir à votre profil</p>
         </div>
       </div>
       <button (click)="closeModal()" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition">
@@ -158,21 +156,16 @@
     </div>
 
     <div *ngIf="modalError"
-         class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-xl mb-6 flex items-center space-x-3">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
+         class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-xl mb-6">
       <p class="text-sm font-semibold">{{ modalError }}</p>
     </div>
 
     <div>
-      <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">
-        Nom de la qualité
-      </label>
+      <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">Nom du loisir</label>
       <input type="text"
-             [(ngModel)]="newQualite.nom_qualite"
-             placeholder="Ex: Ponctuel, Rigoureux, Créatif..."
-             class="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-yellow-500 focus:ring-4 focus:ring-yellow-500/10 outline-none transition text-gray-800 font-medium placeholder-gray-300">
+             [(ngModel)]="newLoisir.nom_loisirs"
+             placeholder="Ex: Football, Musique, Lecture..."
+             class="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-pink-500 focus:ring-4 focus:ring-pink-500/10 outline-none transition text-gray-800 font-medium placeholder-gray-300">
     </div>
 
     <div class="flex space-x-3 mt-8">
@@ -180,9 +173,9 @@
               class="flex-1 px-6 py-3.5 rounded-xl border-2 border-gray-200 text-gray-600 font-bold hover:bg-gray-50 transition">
         Annuler
       </button>
-      <button (click)="submitQualite()"
+      <button (click)="submitLoisir()"
               [disabled]="modalLoading"
-              class="flex-1 flex items-center justify-center space-x-2 px-6 py-3.5 rounded-xl bg-yellow-500 hover:bg-yellow-600 text-white font-bold transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed active:scale-95">
+              class="flex-1 flex items-center justify-center space-x-2 px-6 py-3.5 rounded-xl bg-pink-500 hover:bg-pink-600 text-white font-bold transition shadow-lg disabled:opacity-50 active:scale-95">
         <svg *ngIf="modalLoading" class="animate-spin w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
@@ -190,7 +183,6 @@
         <span>{{ modalLoading ? 'Enregistrement...' : 'Enregistrer' }}</span>
       </button>
     </div>
-
   </div>
 </div>
 
@@ -207,7 +199,7 @@
           </svg>
         </div>
         <div>
-          <h2 class="text-xl font-black text-gray-900">Modifier la Qualité</h2>
+          <h2 class="text-xl font-black text-gray-900">Modifier le Loisir</h2>
           <p class="text-gray-400 text-sm">Mettez à jour les informations</p>
         </div>
       </div>
@@ -219,20 +211,15 @@
     </div>
 
     <div *ngIf="editModalError"
-         class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-xl mb-6 flex items-center space-x-3">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
+         class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-xl mb-6">
       <p class="text-sm font-semibold">{{ editModalError }}</p>
     </div>
 
     <div>
-      <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">
-        Nom de la qualité
-      </label>
+      <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">Nom du loisir</label>
       <input type="text"
-             [(ngModel)]="editQualite.nom_qualite"
-             placeholder="Ex: Ponctuel, Rigoureux..."
+             [(ngModel)]="editLoisir.nom_loisirs"
+             placeholder="Ex: Football, Musique..."
              class="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 outline-none transition text-gray-800 font-medium placeholder-gray-300">
     </div>
 
@@ -241,9 +228,9 @@
               class="flex-1 px-6 py-3.5 rounded-xl border-2 border-gray-200 text-gray-600 font-bold hover:bg-gray-50 transition">
         Annuler
       </button>
-      <button (click)="submitEditQualite()"
+      <button (click)="submitEditLoisir()"
               [disabled]="editModalLoading"
-              class="flex-1 flex items-center justify-center space-x-2 px-6 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed active:scale-95">
+              class="flex-1 flex items-center justify-center space-x-2 px-6 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold transition shadow-lg disabled:opacity-50 active:scale-95">
         <svg *ngIf="editModalLoading" class="animate-spin w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
@@ -251,6 +238,5 @@
         <span>{{ editModalLoading ? 'Modification...' : 'Modifier' }}</span>
       </button>
     </div>
-
   </div>
 </div>

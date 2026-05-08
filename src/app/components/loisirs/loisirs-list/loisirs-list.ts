@@ -1,21 +1,21 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { QualiteService } from '../../../services/qualite';
+import { LoisirsService } from '../../../services/loisirs';
 
 @Component({
-  selector: 'app-qualite-list',
+  selector: 'app-loisirs-list',
   standalone: true,
   imports: [CommonModule, FormsModule],
-  templateUrl: './qualite-list.html',
-  styleUrl: './qualite-list.css'
+  templateUrl: './loisirs-list.html',
+  styleUrl: './loisirs-list.css'
 })
-export class QualiteList implements OnInit {
+export class LoisirsList implements OnInit {
 
-  private qualiteService = inject(QualiteService);
+  private loisirsService = inject(LoisirsService);
   private cdr = inject(ChangeDetectorRef);
 
-  qualites: any[] = [];
+  loisirs: any[] = [];
   error: string | null = null;
 
   // ===== TOAST =====
@@ -25,19 +25,18 @@ export class QualiteList implements OnInit {
   showModal = false;
   modalLoading = false;
   modalError = '';
-  newQualite = { nom_qualite: '' };
+  newLoisir = { nom_loisirs: '' };
 
   // ===== MODAL EDIT =====
   showEditModal = false;
   editModalLoading = false;
   editModalError = '';
-  editQualite = { qualite_id: 0, nom_qualite: '' };
+  editLoisir = { loisirs_id: 0, nom_loisirs: '' };
 
   ngOnInit(): void {
-    this.loadQualites();
+    this.loadLoisirs();
   }
 
-  // ===== TOAST =====
   showToast(message: string, type: 'success' | 'error'): void {
     this.toast = { message, type };
     this.cdr.detectChanges();
@@ -47,13 +46,12 @@ export class QualiteList implements OnInit {
     }, 3000);
   }
 
-  // ===== CHARGER =====
-  loadQualites(): void {
+  loadLoisirs(): void {
     this.error = null;
-    this.qualiteService.getQualites().subscribe({
+    this.loisirsService.getLoisirs().subscribe({
       next: (data: any) => {
-        this.qualites = data.data ?? data;
-        this.cdr.detectChanges();
+        this.loisirs = data.data ?? data;
+        this.cdr.detectChanges(); // ← Forcer la mise à jour
       },
       error: (err: any) => {
         this.error = err.status === 0
@@ -64,37 +62,33 @@ export class QualiteList implements OnInit {
     });
   }
 
-  // ===== MODAL AJOUT =====
   openModal(): void {
     this.showModal = true;
     this.modalError = '';
-    this.newQualite = { nom_qualite: '' };
+    this.newLoisir = { nom_loisirs: '' };
   }
 
   closeModal(): void {
     this.showModal = false;
     this.modalError = '';
     this.modalLoading = false;
-    this.newQualite = { nom_qualite: '' };
+    this.newLoisir = { nom_loisirs: '' };
   }
 
-  submitQualite(): void {
+  submitLoisir(): void {
     this.modalError = '';
-
-    if (!this.newQualite.nom_qualite.trim()) {
-      this.modalError = 'Le nom de la qualité est obligatoire.';
+    if (!this.newLoisir.nom_loisirs.trim()) {
+      this.modalError = 'Le nom du loisir est obligatoire.';
       return;
     }
-
     this.modalLoading = true;
-
-    this.qualiteService.createQualite(this.newQualite).subscribe({
+    this.loisirsService.createLoisir(this.newLoisir).subscribe({
       next: (response: any) => {
-        this.qualites.push(response.data ?? response);
+        this.loisirs.push(response.data ?? response);
         this.modalLoading = false;
         this.cdr.detectChanges();
         this.closeModal();
-        this.showToast('✅ Qualité ajoutée avec succès !', 'success');
+        this.showToast('✅ Loisir ajouté avec succès !', 'success');
       },
       error: (err: any) => {
         this.modalLoading = false;
@@ -108,11 +102,10 @@ export class QualiteList implements OnInit {
     });
   }
 
-  // ===== MODAL EDIT =====
-  openEditModal(qualite: any): void {
-    this.editQualite = {
-      qualite_id: qualite.qualite_id,
-      nom_qualite: qualite.nom_qualite
+  openEditModal(loisir: any): void {
+    this.editLoisir = {
+      loisirs_id: loisir.loisirs_id,
+      nom_loisirs: loisir.nom_loisirs
     };
     this.showEditModal = true;
     this.editModalError = '';
@@ -122,31 +115,28 @@ export class QualiteList implements OnInit {
     this.showEditModal = false;
     this.editModalError = '';
     this.editModalLoading = false;
-    this.editQualite = { qualite_id: 0, nom_qualite: '' };
+    this.editLoisir = { loisirs_id: 0, nom_loisirs: '' };
   }
 
-  submitEditQualite(): void {
+  submitEditLoisir(): void {
     this.editModalError = '';
-
-    if (!this.editQualite.nom_qualite.trim()) {
-      this.editModalError = 'Le nom de la qualité est obligatoire.';
+    if (!this.editLoisir.nom_loisirs.trim()) {
+      this.editModalError = 'Le nom du loisir est obligatoire.';
       return;
     }
-
     this.editModalLoading = true;
-
-    this.qualiteService.updateQualite(this.editQualite.qualite_id, {
-      nom_qualite: this.editQualite.nom_qualite
+    this.loisirsService.updateLoisir(this.editLoisir.loisirs_id, {
+      nom_loisirs: this.editLoisir.nom_loisirs
     }).subscribe({
       next: (response: any) => {
-        const index = this.qualites.findIndex((q: any) => q.qualite_id === this.editQualite.qualite_id);
+        const index = this.loisirs.findIndex((l: any) => l.loisirs_id === this.editLoisir.loisirs_id);
         if (index !== -1) {
-          this.qualites[index] = response.data ?? this.editQualite;
+          this.loisirs[index] = response.data ?? this.editLoisir;
         }
         this.editModalLoading = false;
         this.cdr.detectChanges();
         this.closeEditModal();
-        this.showToast('✅ Qualité modifiée avec succès !', 'success');
+        this.showToast('✅ Loisir modifié avec succès !', 'success');
       },
       error: (err: any) => {
         this.editModalLoading = false;
@@ -160,14 +150,13 @@ export class QualiteList implements OnInit {
     });
   }
 
-  // ===== SUPPRIMER =====
-  deleteQualite(id: number): void {
-    if (confirm('Voulez-vous vraiment supprimer cette qualité ?')) {
-      this.qualiteService.deleteQualite(id).subscribe({
+  deleteLoisir(id: number): void {
+    if (confirm('Voulez-vous vraiment supprimer ce loisir ?')) {
+      this.loisirsService.deleteLoisir(id).subscribe({
         next: () => {
-          this.qualites = this.qualites.filter((q: any) => q.qualite_id !== id);
+          this.loisirs = this.loisirs.filter((l: any) => l.loisirs_id !== id);
           this.cdr.detectChanges();
-          this.showToast('🗑️ Qualité supprimée avec succès !', 'success');
+          this.showToast('🗑️ Loisir supprimé avec succès !', 'success');
         },
         error: (err: any) => {
           this.showToast('❌ Erreur lors de la suppression.', 'error');

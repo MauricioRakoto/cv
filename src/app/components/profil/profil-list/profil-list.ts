@@ -1,9 +1,331 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { ProfilService } from '../../../services/profil';
+import { LangueService } from '../../../services/langue';
+import { QualiteService } from '../../../services/qualite';
+import { EtudeService } from '../../../services/etude';
+import { ExperienceService } from '../../../services/experience';
 
 @Component({
   selector: 'app-profil-list',
-  imports: [],
+  standalone: true,
+  imports: [CommonModule, FormsModule],
   templateUrl: './profil-list.html',
-  styleUrl: './profil-list.css',
+  styleUrl: './profil-list.css'
 })
-export class ProfilList {}
+export class ProfilList implements OnInit {
+
+  private profilService = inject(ProfilService);
+  private langueService = inject(LangueService);
+  private qualiteService = inject(QualiteService);
+  private etudeService = inject(EtudeService);
+  private experienceService = inject(ExperienceService);
+  private cdr = inject(ChangeDetectorRef);
+
+  profils: any[] = [];
+  langues: any[] = [];
+  qualites: any[] = [];
+  etudes: any[] = [];
+  experiences: any[] = [];
+  error: string | null = null;
+
+  // ===== TOAST =====
+  toast: { message: string; type: 'success' | 'error' } | null = null;
+
+  // ===== MODAL AJOUT =====
+  showModal = false;
+  modalLoading = false;
+  modalError = '';
+  photoPreview: string | null = null;
+  photoFile: File | null = null;
+
+  newProfil = {
+    nom: '',
+    prenom: '',
+    sexe: '',
+    email: '',
+    adresse_pr: '',
+    status: '',
+    date_birth: '',
+    nationalite: '',
+    desc: '',
+    langue_id: '',
+    qualite_id: '',
+    etude_id: '',
+    exp_id: ''
+  };
+
+  // ===== MODAL EDIT =====
+  showEditModal = false;
+  editModalLoading = false;
+  editModalError = '';
+  editPhotoPreview: string | null = null;
+  editPhotoFile: File | null = null;
+
+  editProfil = {
+    profil_id: 0,
+    nom: '',
+    prenom: '',
+    sexe: '',
+    email: '',
+    adresse_pr: '',
+    status: '',
+    date_birth: '',
+    nationalite: '',
+    desc: '',
+    langue_id: '',
+    qualite_id: '',
+    etude_id: '',
+    exp_id: '',
+    photo: ''
+  };
+
+  // ===== MODAL DETAIL =====
+  showDetailModal = false;
+  selectedProfil: any = null;
+
+  ngOnInit(): void {
+    this.loadProfils();
+    this.loadRelations();
+  }
+
+  // ===== TOAST =====
+  showToast(message: string, type: 'success' | 'error'): void {
+    this.toast = { message, type };
+    this.cdr.detectChanges();
+    setTimeout(() => {
+      this.toast = null;
+      this.cdr.detectChanges();
+    }, 3000);
+  }
+
+  // ===== CHARGER RELATIONS =====
+  loadRelations(): void {
+    this.langueService.getLangues().subscribe({
+      next: (data: any) => { this.langues = data.data ?? data; this.cdr.detectChanges(); }
+    });
+    this.qualiteService.getQualites().subscribe({
+      next: (data: any) => { this.qualites = data.data ?? data; this.cdr.detectChanges(); }
+    });
+    this.etudeService.getEtudes().subscribe({
+      next: (data: any) => { this.etudes = data.data ?? data; this.cdr.detectChanges(); }
+    });
+    this.experienceService.getExperiences().subscribe({
+      next: (data: any) => { this.experiences = data.data ?? data; this.cdr.detectChanges(); }
+    });
+  }
+
+  // ===== CHARGER PROFILS =====
+  loadProfils(): void {
+    this.error = null;
+    this.profilService.getProfils().subscribe({
+      next: (data: any) => {
+        this.profils = data.data ?? data;
+        this.cdr.detectChanges();
+      },
+      error: (err: any) => {
+        this.error = err.status === 0
+          ? '❌ Serveur Laravel inaccessible sur http://127.0.0.1:8000'
+          : `❌ Erreur ${err.status}`;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  // ===== PHOTO =====
+  onPhotoChange(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.photoFile = file;
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.photoPreview = e.target.result;
+        this.cdr.detectChanges();
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  onEditPhotoChange(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      this.editPhotoFile = file;
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.editPhotoPreview = e.target.result;
+        this.cdr.detectChanges();
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  getPhotoUrl(photo: string): string {
+    return photo ? `http://127.0.0.1:8000/storage/${photo}` : '';
+  }
+
+  // ===== MODAL AJOUT =====
+  openModal(): void {
+    this.showModal = true;
+    this.modalError = '';
+    this.photoPreview = null;
+    this.photoFile = null;
+    this.newProfil = {
+      nom: '', prenom: '', sexe: '', email: '',
+      adresse_pr: '', status: '', date_birth: '',
+      nationalite: '', desc: '', langue_id: '',
+      qualite_id: '', etude_id: '', exp_id: ''
+    };
+  }
+
+  closeModal(): void {
+    this.showModal = false;
+    this.modalError = '';
+    this.modalLoading = false;
+    this.photoPreview = null;
+    this.photoFile = null;
+  }
+
+  submitProfil(): void {
+    this.modalError = '';
+
+    if (!this.newProfil.nom.trim()) { this.modalError = 'Le nom est obligatoire.'; return; }
+    if (!this.newProfil.prenom.trim()) { this.modalError = 'Le prénom est obligatoire.'; return; }
+    if (!this.newProfil.email.trim()) { this.modalError = 'L\'email est obligatoire.'; return; }
+    if (!this.newProfil.langue_id) { this.modalError = 'La langue est obligatoire.'; return; }
+    if (!this.newProfil.qualite_id) { this.modalError = 'La qualité est obligatoire.'; return; }
+    if (!this.newProfil.etude_id) { this.modalError = 'L\'étude est obligatoire.'; return; }
+    if (!this.newProfil.exp_id) { this.modalError = 'L\'expérience est obligatoire.'; return; }
+
+    this.modalLoading = true;
+
+    const formData = new FormData();
+    Object.entries(this.newProfil).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+    if (this.photoFile) {
+      formData.append('photo', this.photoFile);
+    }
+
+    this.profilService.createProfil(formData).subscribe({
+      next: (response: any) => {
+        this.profils.push(response.data ?? response);
+        this.modalLoading = false;
+        this.cdr.detectChanges();
+        this.closeModal();
+        this.showToast('✅ Profil créé avec succès !', 'success');
+      },
+      error: (err: any) => {
+        this.modalLoading = false;
+        this.modalError = err.status === 0
+          ? '❌ Serveur inaccessible.'
+          : err.status === 422
+            ? '❌ Données invalides. Vérifiez les champs.'
+            : `❌ Erreur ${err.status}`;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  // ===== MODAL EDIT =====
+  openEditModal(profil: any): void {
+    this.editProfil = {
+      profil_id: profil.profil_id,
+      nom: profil.nom,
+      prenom: profil.prenom,
+      sexe: profil.sexe,
+      email: profil.email,
+      adresse_pr: profil.adresse_pr,
+      status: profil.status,
+      date_birth: profil.date_birth,
+      nationalite: profil.nationalite,
+      desc: profil.desc,
+      langue_id: profil.langue_id,
+      qualite_id: profil.qualite_id,
+      etude_id: profil.etude_id,
+      exp_id: profil.exp_id,
+      photo: profil.photo
+    };
+    this.editPhotoPreview = profil.photo ? this.getPhotoUrl(profil.photo) : null;
+    this.editPhotoFile = null;
+    this.showEditModal = true;
+    this.editModalError = '';
+  }
+
+  closeEditModal(): void {
+    this.showEditModal = false;
+    this.editModalError = '';
+    this.editModalLoading = false;
+    this.editPhotoPreview = null;
+    this.editPhotoFile = null;
+  }
+
+  submitEditProfil(): void {
+    this.editModalError = '';
+
+    if (!this.editProfil.nom.trim()) { this.editModalError = 'Le nom est obligatoire.'; return; }
+    if (!this.editProfil.prenom.trim()) { this.editModalError = 'Le prénom est obligatoire.'; return; }
+    if (!this.editProfil.email.trim()) { this.editModalError = 'L\'email est obligatoire.'; return; }
+
+    this.editModalLoading = true;
+
+    const formData = new FormData();
+    const { profil_id, photo, ...fields } = this.editProfil;
+    Object.entries(fields).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+    if (this.editPhotoFile) {
+      formData.append('photo', this.editPhotoFile);
+    }
+
+    this.profilService.updateProfil(this.editProfil.profil_id, formData).subscribe({
+      next: (response: any) => {
+        const index = this.profils.findIndex((p: any) => p.profil_id === this.editProfil.profil_id);
+        if (index !== -1) {
+          this.profils[index] = response.data ?? this.editProfil;
+        }
+        this.editModalLoading = false;
+        this.cdr.detectChanges();
+        this.closeEditModal();
+        this.showToast('✅ Profil modifié avec succès !', 'success');
+      },
+      error: (err: any) => {
+        this.editModalLoading = false;
+        this.editModalError = err.status === 0
+          ? '❌ Serveur inaccessible.'
+          : err.status === 422
+            ? '❌ Données invalides.'
+            : `❌ Erreur ${err.status}`;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  // ===== MODAL DETAIL =====
+  openDetailModal(profil: any): void {
+    this.selectedProfil = profil;
+    this.showDetailModal = true;
+  }
+
+  closeDetailModal(): void {
+    this.showDetailModal = false;
+    this.selectedProfil = null;
+  }
+
+  // ===== SUPPRIMER =====
+  deleteProfil(id: number): void {
+    if (confirm('Voulez-vous vraiment supprimer ce profil ?')) {
+      this.profilService.deleteProfil(id).subscribe({
+        next: () => {
+          this.profils = this.profils.filter((p: any) => p.profil_id !== id);
+          this.cdr.detectChanges();
+          this.showToast('🗑️ Profil supprimé avec succès !', 'success');
+        },
+        error: (err: any) => {
+          this.showToast('❌ Erreur lors de la suppression.', 'error');
+          console.error(err);
+        }
+      });
+    }
+  }
+}
