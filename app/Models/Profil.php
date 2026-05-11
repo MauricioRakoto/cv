@@ -6,55 +6,55 @@ use Illuminate\Database\Eloquent\Model;
 
 class Profil extends Model
 {
-    // Clé primaire personnalisée
     protected $primaryKey = 'profil_id';
 
-    // Champs mass-assignable
     protected $fillable = [
-        'nom',
-        'prenom',
-        'sexe',
-        'email',
-        'photo',
-        'adresse_pr',
-        'status',
-        'date_birth',
-        'nationalite',
-        'desc',
-        'langue_id',
-        'qualite_id',
-        'etude_id',
-        'exp_id',
+        'nom', 'prenom', 'sexe', 'email', 'photo',
+        'adresse_pr', 'status', 'date_birth',
+        'nationalite', 'desc',
+        'langue_id', 'qualite_id', 'etude_id',
+        'exp_id', 'competence_id', 'loisirs_id',
     ];
 
-    // Cast des dates
+    // ===== CAST JSON =====
     protected $casts = [
-        'date_birth' => 'date',
+        'date_birth'    => 'date',
+        'langue_id'     => 'array',  // ← JSON array
+        'qualite_id'    => 'array',  // ← JSON array
+        'etude_id'      => 'array',  // ← JSON array
+        'exp_id'        => 'array',  // ← JSON array
+        'competence_id' => 'array',  // ← JSON array
+        'loisirs_id'    => 'array',  // ← JSON array
     ];
 
-    // ========== RELATIONS ==========
-
-    // Appartient à une Langue
-    public function langue()
+    // ===== RELATIONS (retourne plusieurs) =====
+    public function langues()
     {
-        return $this->belongsTo(Langue::class, 'langue_id', 'langue_id');
+        return Langue::whereIn('langue_id', $this->langue_id ?? [])->get();
     }
 
-    // Appartient à une Qualite
-    public function qualite()
+    public function qualites()
     {
-        return $this->belongsTo(Qualite::class, 'qualite_id', 'qualite_id');
+        return Qualite::whereIn('qualite_id', $this->qualite_id ?? [])->get();
     }
 
-    // Appartient à une Etude
-    public function etude()
+    public function etudes()
     {
-        return $this->belongsTo(Etude::class, 'etude_id', 'etude_id');
+        return Etude::whereIn('etude_id', $this->etude_id ?? [])->get();
     }
 
-    // Appartient à une Experience
-    public function experience()
+    public function experiences()
     {
-        return $this->belongsTo(Experience::class, 'exp_id', 'exp_id');
+        return Experience::whereIn('exp_id', $this->exp_id ?? [])->get();
+    }
+
+    public function competences()
+    {
+        return Competence::whereIn('competence_id', $this->competence_id ?? [])->get();
+    }
+
+    public function loisirs()
+    {
+        return Loisirs::whereIn('loisirs_id', $this->loisirs_id ?? [])->get();
     }
 }
