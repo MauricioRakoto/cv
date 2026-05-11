@@ -6,6 +6,8 @@ import { LangueService } from '../../../services/langue';
 import { QualiteService } from '../../../services/qualite';
 import { EtudeService } from '../../../services/etude';
 import { ExperienceService } from '../../../services/experience';
+import { CompetenceService } from '../../../services/competence';
+import { LoisirsService } from '../../../services/loisirs';
 
 @Component({
   selector: 'app-profil-list',
@@ -21,6 +23,8 @@ export class ProfilList implements OnInit {
   private qualiteService = inject(QualiteService);
   private etudeService = inject(EtudeService);
   private experienceService = inject(ExperienceService);
+  private competenceService = inject(CompetenceService);
+  private loisirsService = inject(LoisirsService);
   private cdr = inject(ChangeDetectorRef);
 
   profils: any[] = [];
@@ -28,6 +32,8 @@ export class ProfilList implements OnInit {
   qualites: any[] = [];
   etudes: any[] = [];
   experiences: any[] = [];
+  competences: any[] = [];
+  loisirs: any[] = [];
   error: string | null = null;
 
   // ===== TOAST =====
@@ -41,19 +47,15 @@ export class ProfilList implements OnInit {
   photoFile: File | null = null;
 
   newProfil = {
-    nom: '',
-    prenom: '',
-    sexe: '',
-    email: '',
-    adresse_pr: '',
-    status: '',
-    date_birth: '',
-    nationalite: '',
-    desc: '',
-    langue_id: '',
-    qualite_id: '',
-    etude_id: '',
-    exp_id: ''
+    nom: '', prenom: '', sexe: '', email: '',
+    adresse_pr: '', status: '', date_birth: '',
+    nationalite: '', desc: '',
+    langue_id: [] as number[],
+    qualite_id: [] as number[],
+    etude_id: [] as number[],
+    exp_id: [] as number[],
+    competence_id: [] as number[],
+    loisirs_id: [] as number[]
   };
 
   // ===== MODAL EDIT =====
@@ -64,21 +66,15 @@ export class ProfilList implements OnInit {
   editPhotoFile: File | null = null;
 
   editProfil = {
-    profil_id: 0,
-    nom: '',
-    prenom: '',
-    sexe: '',
-    email: '',
-    adresse_pr: '',
-    status: '',
-    date_birth: '',
-    nationalite: '',
-    desc: '',
-    langue_id: '',
-    qualite_id: '',
-    etude_id: '',
-    exp_id: '',
-    photo: ''
+    profil_id: 0, nom: '', prenom: '', sexe: '',
+    email: '', adresse_pr: '', status: '', date_birth: '',
+    nationalite: '', desc: '', photo: '',
+    langue_id: [] as number[],
+    qualite_id: [] as number[],
+    etude_id: [] as number[],
+    exp_id: [] as number[],
+    competence_id: [] as number[],
+    loisirs_id: [] as number[]
   };
 
   // ===== MODAL DETAIL =====
@@ -114,6 +110,12 @@ export class ProfilList implements OnInit {
     this.experienceService.getExperiences().subscribe({
       next: (data: any) => { this.experiences = data.data ?? data; this.cdr.detectChanges(); }
     });
+    this.competenceService.getCompetences().subscribe({
+      next: (data: any) => { this.competences = data.data ?? data; this.cdr.detectChanges(); }
+    });
+    this.loisirsService.getLoisirs().subscribe({
+      next: (data: any) => { this.loisirs = data.data ?? data; this.cdr.detectChanges(); }
+    });
   }
 
   // ===== CHARGER PROFILS =====
@@ -131,6 +133,21 @@ export class ProfilList implements OnInit {
         this.cdr.detectChanges();
       }
     });
+  }
+
+  // ===== CHECKBOX TOGGLE =====
+  toggleSelection(array: number[], id: number): void {
+    const index = array.indexOf(id);
+    if (index === -1) {
+      array.push(id);
+    } else {
+      array.splice(index, 1);
+    }
+    this.cdr.detectChanges();
+  }
+
+  isSelected(array: number[], id: number): boolean {
+    return array.includes(id);
   }
 
   // ===== PHOTO =====
@@ -164,6 +181,32 @@ export class ProfilList implements OnInit {
     return photo ? `http://127.0.0.1:8000/storage/${photo}` : '';
   }
 
+  // ===== FORM DATA HELPER =====
+  buildFormData(profil: any, photoFile: File | null): FormData {
+    const formData = new FormData();
+    const simpleFields = ['nom', 'prenom', 'sexe', 'email', 'adresse_pr', 'status', 'date_birth', 'nationalite', 'desc'];
+
+    simpleFields.forEach(field => {
+      if (profil[field] !== undefined) {
+        formData.append(field, profil[field]);
+      }
+    });
+
+    // Envoyer les tableaux JSON
+    const arrayFields = ['langue_id', 'qualite_id', 'etude_id', 'exp_id', 'competence_id', 'loisirs_id'];
+    arrayFields.forEach(field => {
+      const arr = profil[field] as number[];
+      if (arr && arr.length > 0) {
+        arr.forEach((id: number) => {
+          formData.append(`${field}[]`, id.toString());
+        });
+      }
+    });
+
+    if (photoFile) formData.append('photo', photoFile);
+    return formData;
+  }
+
   // ===== MODAL AJOUT =====
   openModal(): void {
     this.showModal = true;
@@ -173,8 +216,9 @@ export class ProfilList implements OnInit {
     this.newProfil = {
       nom: '', prenom: '', sexe: '', email: '',
       adresse_pr: '', status: '', date_birth: '',
-      nationalite: '', desc: '', langue_id: '',
-      qualite_id: '', etude_id: '', exp_id: ''
+      nationalite: '', desc: '',
+      langue_id: [], qualite_id: [], etude_id: [],
+      exp_id: [], competence_id: [], loisirs_id: []
     };
   }
 
@@ -192,20 +236,15 @@ export class ProfilList implements OnInit {
     if (!this.newProfil.nom.trim()) { this.modalError = 'Le nom est obligatoire.'; return; }
     if (!this.newProfil.prenom.trim()) { this.modalError = 'Le prénom est obligatoire.'; return; }
     if (!this.newProfil.email.trim()) { this.modalError = 'L\'email est obligatoire.'; return; }
-    if (!this.newProfil.langue_id) { this.modalError = 'La langue est obligatoire.'; return; }
-    if (!this.newProfil.qualite_id) { this.modalError = 'La qualité est obligatoire.'; return; }
-    if (!this.newProfil.etude_id) { this.modalError = 'L\'étude est obligatoire.'; return; }
-    if (!this.newProfil.exp_id) { this.modalError = 'L\'expérience est obligatoire.'; return; }
+    if (!this.newProfil.langue_id.length) { this.modalError = 'Sélectionnez au moins une langue.'; return; }
+    if (!this.newProfil.qualite_id.length) { this.modalError = 'Sélectionnez au moins une qualité.'; return; }
+    if (!this.newProfil.etude_id.length) { this.modalError = 'Sélectionnez au moins une étude.'; return; }
+    if (!this.newProfil.exp_id.length) { this.modalError = 'Sélectionnez au moins une expérience.'; return; }
+    if (!this.newProfil.competence_id.length) { this.modalError = 'Sélectionnez au moins une compétence.'; return; }
+    if (!this.newProfil.loisirs_id.length) { this.modalError = 'Sélectionnez au moins un loisir.'; return; }
 
     this.modalLoading = true;
-
-    const formData = new FormData();
-    Object.entries(this.newProfil).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
-    if (this.photoFile) {
-      formData.append('photo', this.photoFile);
-    }
+    const formData = this.buildFormData(this.newProfil, this.photoFile);
 
     this.profilService.createProfil(formData).subscribe({
       next: (response: any) => {
@@ -231,20 +270,17 @@ export class ProfilList implements OnInit {
   openEditModal(profil: any): void {
     this.editProfil = {
       profil_id: profil.profil_id,
-      nom: profil.nom,
-      prenom: profil.prenom,
-      sexe: profil.sexe,
-      email: profil.email,
-      adresse_pr: profil.adresse_pr,
-      status: profil.status,
-      date_birth: profil.date_birth,
-      nationalite: profil.nationalite,
-      desc: profil.desc,
-      langue_id: profil.langue_id,
-      qualite_id: profil.qualite_id,
-      etude_id: profil.etude_id,
-      exp_id: profil.exp_id,
-      photo: profil.photo
+      nom: profil.nom, prenom: profil.prenom,
+      sexe: profil.sexe, email: profil.email,
+      adresse_pr: profil.adresse_pr, status: profil.status,
+      date_birth: profil.date_birth, nationalite: profil.nationalite,
+      desc: profil.desc, photo: profil.photo,
+      langue_id: [...(profil.langue_id ?? [])],
+      qualite_id: [...(profil.qualite_id ?? [])],
+      etude_id: [...(profil.etude_id ?? [])],
+      exp_id: [...(profil.exp_id ?? [])],
+      competence_id: [...(profil.competence_id ?? [])],
+      loisirs_id: [...(profil.loisirs_id ?? [])]
     };
     this.editPhotoPreview = profil.photo ? this.getPhotoUrl(profil.photo) : null;
     this.editPhotoFile = null;
@@ -268,22 +304,12 @@ export class ProfilList implements OnInit {
     if (!this.editProfil.email.trim()) { this.editModalError = 'L\'email est obligatoire.'; return; }
 
     this.editModalLoading = true;
-
-    const formData = new FormData();
-    const { profil_id, photo, ...fields } = this.editProfil;
-    Object.entries(fields).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
-    if (this.editPhotoFile) {
-      formData.append('photo', this.editPhotoFile);
-    }
+    const formData = this.buildFormData(this.editProfil, this.editPhotoFile);
 
     this.profilService.updateProfil(this.editProfil.profil_id, formData).subscribe({
       next: (response: any) => {
         const index = this.profils.findIndex((p: any) => p.profil_id === this.editProfil.profil_id);
-        if (index !== -1) {
-          this.profils[index] = response.data ?? this.editProfil;
-        }
+        if (index !== -1) this.profils[index] = response.data ?? this.editProfil;
         this.editModalLoading = false;
         this.cdr.detectChanges();
         this.closeEditModal();

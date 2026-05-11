@@ -20,18 +20,12 @@
   <div class="flex flex-col md:flex-row justify-between items-end md:items-center mb-10 gap-4">
     <div>
       <div class="flex items-center space-x-3 mb-1">
-        <div class="p-2 bg-indigo-500/10 rounded-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-          </svg>
-        </div>
         <h1 class="text-3xl font-black text-gray-900 tracking-tight">Compétences</h1>
       </div>
-      <p class="text-gray-500 font-medium ml-11">Vos compétences techniques et professionnelles</p>
     </div>
 
     <button (click)="openModal()"
-            class="flex items-center space-x-2 bg-indigo-500 hover:bg-indigo-600 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 shadow-[0_10px_20px_rgba(99,102,241,0.2)] active:scale-95">
+            class="flex items-center space-x-2 bg-red-700 hover:bg-red-300 text-dark px-6 py-3 rounded-xl font-bold transition-all duration-300 shadow-[0_10px_20px_rgba(99,102,241,0.2)] active:scale-95">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" />
       </svg>
@@ -86,29 +80,26 @@
         <tr *ngFor="let competence of competences; let i = index"
             class="group hover:bg-indigo-50/30 transition duration-200">
 
-          <td class="px-8 py-5 font-bold text-gray-300 text-sm">
+          <td class="px-8 py-5 font-bold text-gray-900">
             {{ (i + 1).toString().padStart(2, '0') }}
           </td>
 
           <td class="px-8 py-5">
             <div class="flex items-center space-x-4">
-              <div class="w-10 h-10 rounded-xl bg-indigo-500 text-white flex items-center justify-center font-black shadow-sm group-hover:scale-110 transition duration-300">
-                {{ competence.nom_comp.charAt(0).toUpperCase() }}
-              </div>
-              <span class="font-bold text-gray-900 tracking-tight">{{ competence.nom_comp }}</span>
+              <span class="font-bold text-gray-900">{{ competence.nom_comp }}</span>
             </div>
           </td>
 
           <td class="px-8 py-5 text-center">
             <div class="flex justify-center space-x-2">
               <button (click)="openEditModal(competence)"
-                      class="p-2 text-gray-400 hover:text-amber-500 hover:bg-amber-50 rounded-lg transition">
+                      class="p-2 text-dark hover:text-red-300 hover:bg-amber-50 rounded-lg transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                 </svg>
               </button>
               <button (click)="deleteCompetence(competence.competence_id)"
-                      class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition">
+                      class="p-2 text-dark hover:text-red-300 hover:bg-red-50 rounded-lg transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
@@ -138,11 +129,6 @@
 
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center space-x-3">
-        <div class="p-2.5 bg-indigo-500/10 rounded-xl">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-          </svg>
-        </div>
         <div>
           <h2 class="text-xl font-black text-gray-900">Nouvelle Compétence</h2>
           <p class="text-gray-400 text-sm">Ajoutez une compétence à votre profil</p>
@@ -165,7 +151,7 @@
       <input type="text"
              [(ngModel)]="newCompetence.nom_comp"
              placeholder="Ex: PHP, Angular, Laravel..."
-             class="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition text-gray-800 font-medium placeholder-gray-300">
+             class="w-full px-4 py-3.5 rounded-xl border border-red-300 focus:border-red-300 focus:ring-4 focus:ring-red-700 outline-none transition text-gray-800 font-medium placeholder-gray-300">
     </div>
 
     <div class="flex space-x-3 mt-8">
@@ -175,7 +161,7 @@
       </button>
       <button (click)="submitCompetence()"
               [disabled]="modalLoading"
-              class="flex-1 flex items-center justify-center space-x-2 px-6 py-3.5 rounded-xl bg-indigo-500 hover:bg-indigo-600 text-white font-bold transition shadow-lg disabled:opacity-50 active:scale-95">
+              class="flex-1 flex items-center justify-center space-x-2 px-6 py-3.5 rounded-xl bg-red-700 hover:bg-red-300 text-white font-bold transition shadow-lg disabled:opacity-50 active:scale-95">
         <svg *ngIf="modalLoading" class="animate-spin w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
@@ -193,17 +179,12 @@
 
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center space-x-3">
-        <div class="p-2.5 bg-amber-500/10 rounded-xl">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-          </svg>
-        </div>
         <div>
           <h2 class="text-xl font-black text-gray-900">Modifier la Compétence</h2>
           <p class="text-gray-400 text-sm">Mettez à jour les informations</p>
         </div>
       </div>
-      <button (click)="closeEditModal()" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition">
+      <button (click)="closeEditModal()" class="p-2 text-dark hover:text-red-300 hover:bg-gray-100 rounded-xl transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
         </svg>
@@ -220,7 +201,7 @@
       <input type="text"
              [(ngModel)]="editCompetence.nom_comp"
              placeholder="Ex: PHP, Angular..."
-             class="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 outline-none transition text-gray-800 font-medium placeholder-gray-300">
+             class="w-full px-4 py-3.5 rounded-xl border border-red-300 focus:border-red-300 focus:ring-4 focus:ring-red-700 outline-none transition text-gray-800 font-medium placeholder-gray-300">
     </div>
 
     <div class="flex space-x-3 mt-8">
@@ -230,7 +211,7 @@
       </button>
       <button (click)="submitEditCompetence()"
               [disabled]="editModalLoading"
-              class="flex-1 flex items-center justify-center space-x-2 px-6 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold transition shadow-lg disabled:opacity-50 active:scale-95">
+              class="flex-1 flex items-center justify-center space-x-2 px-6 py-3.5 rounded-xl bg-red-700 hover:bg-red-300 text-white font-bold transition shadow-lg disabled:opacity-50 active:scale-95">
         <svg *ngIf="editModalLoading" class="animate-spin w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>

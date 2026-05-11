@@ -6,15 +6,18 @@ import { ExperienceList } from './components/experience/experience-list/experien
 import { ProfilList } from './components/profil/profil-list/profil-list';
 import { CompetenceList } from './components/competence/competence-list/competence-list';
 import { LoisirsList } from './components/loisirs/loisirs-list/loisirs-list';
+import { Home } from './components/home/home';
+import { Cv } from './components/cv/cv';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/profils', pathMatch: 'full' },
+  { path: '', component: Home },                    // ← Page accueil
+  { path: 'cv', component: Cv },               // ← Page CV
+  { path: 'profils', component: ProfilList },
   { path: 'langues', component: LangueList },
   { path: 'qualites', component: QualiteList },
   { path: 'etudes', component: EtudeList },
   { path: 'experiences', component: ExperienceList },
-  { path: 'profils', component: ProfilList },
   { path: 'competences', component: CompetenceList },
   { path: 'loisirs', component: LoisirsList },
-  { path: '**', redirectTo: '/profils' }
+  { path: '**', redirectTo: '' }
 ];

@@ -4,18 +4,12 @@
   <div class="flex flex-col md:flex-row justify-between items-end md:items-center mb-10 gap-4">
     <div>
       <div class="flex items-center space-x-3 mb-1">
-        <div class="p-2 bg-blue-600/10 rounded-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 002 2h1.5a3.5 3.5 0 013.5 3.5V17a4 4 0 11-8 0v-1h-1a2 2 0 01-2-2v-2a2 2 0 00-2-2h-2a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 002-2V3.055" />
-          </svg>
-        </div>
         <h1 class="text-3xl font-black text-gray-900 tracking-tight">Langues</h1>
       </div>
-      <p class="text-gray-500 font-medium ml-11">Maîtrise linguistique et certifications</p>
     </div>
 
     <button (click)="openModal()"
-            class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 shadow-[0_10px_20px_rgba(37,99,235,0.2)] active:scale-95">
+            class="flex items-center h-10 fon space-x-3  px-8 py-4 rounded-2xl font-black transition-all duration-300 shadow-xl active:scale-95 bg-red-700 text-black border hover:bg-red-300">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" />
       </svg>
@@ -72,16 +66,13 @@
         <tr *ngFor="let langue of langues; let i = index"
             class="group hover:bg-blue-50/30 transition duration-200">
 
-          <td class="px-8 py-5 font-bold text-gray-300 text-sm">
+          <td class="px-8 py-5 font-bold text-gray-900">
             {{ (i + 1).toString().padStart(2, '0') }}
           </td>
 
           <td class="px-8 py-5">
             <div class="flex items-center space-x-4">
-              <div class="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center font-black shadow-sm group-hover:scale-110 transition duration-300">
-                {{ langue.nom_langue.charAt(0).toUpperCase() }}
-              </div>
-              <span class="font-bold text-gray-900 tracking-tight">{{ langue.nom_langue }}</span>
+              <span class="font-bold text-gray-900">{{ langue.nom_langue }}</span>
             </div>
           </td>
 
@@ -90,7 +81,7 @@
                 'bg-emerald-50 text-emerald-700 border-emerald-100': ['Natif', 'Courant'].includes(langue.niveau),
                 'bg-blue-50 text-blue-700 border-blue-100': ['Intermédiaire', 'B2'].includes(langue.niveau),
                 'bg-amber-50 text-amber-700 border-amber-100': ['Débutant', 'A1'].includes(langue.niveau)
-              }" class="inline-flex items-center px-4 py-1 rounded-full border text-[10px] font-black uppercase tracking-widest">
+              }" class="font-bold text-gray-900">
               {{ langue.niveau }}
             </div>
           </td>
@@ -99,13 +90,13 @@
             <div class="flex justify-center space-x-2">
               <!-- Remplacer le <a [routerLink]...> edit par un bouton -->
               <button (click)="openEditModal(langue)"
-                      class="p-2 text-gray-400 hover:text-amber-500 transition">
+                      class="p-2 text-dark hover:text-red-300 transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                 </svg>
               </button>
               <button (click)="deleteLangue(langue.langue_id)"
-                      class="p-2 text-gray-400 hover:text-red-500 transition">
+                      class="p-2 text-dark hover:text-red-300 transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
@@ -138,14 +129,9 @@
 
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center space-x-3">
-        <div class="p-2.5 bg-blue-600/10 rounded-xl">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 002 2h1.5a3.5 3.5 0 013.5 3.5V17a4 4 0 11-8 0v-1h-1a2 2 0 01-2-2v-2a2 2 0 00-2-2h-2a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 002-2V3.055" />
-          </svg>
-        </div>
         <div>
           <h2 class="text-xl font-black text-gray-900">Nouvelle Langue</h2>
-          <p class="text-gray-400 text-sm">Ajoutez une langue à votre profil</p>
+          <p class="text-gray-400 text-sm">Ajoutez une langue</p>
         </div>
       </div>
       <button (click)="closeModal()"
@@ -182,7 +168,7 @@
         <input type="text"
                [(ngModel)]="newLangue.nom_langue"
                placeholder="Ex: Français, Anglais, Espagnol..."
-               class="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition text-gray-800 font-medium placeholder-gray-300">
+               class="w-full px-4 py-3.5 rounded-xl border border-red-300 focus:border-red-300 focus:ring-4 focus:ring-red-700 outline-none transition text-gray-800 font-medium placeholder-gray-300">
       </div>
 
       <div>
@@ -192,7 +178,7 @@
         <input type="text"
                [(ngModel)]="newLangue.niveau"
                placeholder="Ex: Natif, Courant, Intermédiaire, B2..."
-               class="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition text-gray-800 font-medium placeholder-gray-300">
+               class="w-full px-4 py-3.5 rounded-xl border border-red-300 focus:border-red-300 focus:ring-4 focus:ring-red-700 outline-none transition text-gray-800 font-medium placeholder-gray-300">
       </div>
     </div>
 
@@ -203,7 +189,7 @@
       </button>
       <button (click)="submitLangue()"
               [disabled]="modalLoading"
-              class="flex-1 flex items-center justify-center space-x-2 px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition shadow-lg shadow-blue-600/20 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95">
+              class="flex-1 flex items-center justify-center space-x-2 px-6 py-3.5 rounded-xl bg-red-700 hover:bg-blue-700 text-white font-bold transition shadow-lg shadow-blue-600/20 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95">
         <svg *ngIf="modalLoading" class="animate-spin w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
@@ -227,14 +213,9 @@
     <!-- HEADER -->
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center space-x-3">
-        <div class="p-2.5 bg-amber-500/10 rounded-xl">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-          </svg>
-        </div>
         <div>
           <h2 class="text-xl font-black text-gray-900">Modifier la Langue</h2>
-          <p class="text-gray-400 text-sm">Mettez à jour les informations</p>
+          <p class="text-gray-400 text-sm">Mis à jour une langue</p>
         </div>
       </div>
       <button (click)="closeEditModal()"
@@ -274,7 +255,7 @@
         <input type="text"
                [(ngModel)]="editLangue.nom_langue"
                placeholder="Ex: Français, Anglais..."
-               class="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 outline-none transition text-gray-800 font-medium placeholder-gray-300">
+               class="w-full px-4 py-3.5 rounded-xl border border-red-300 focus:border-red-300 focus:ring-4 focus:ring-red-700 outline-none transition text-gray-800 font-medium placeholder-gray-300">
       </div>
 
       <!-- NIVEAU -->
@@ -285,7 +266,7 @@
         <input type="text"
                [(ngModel)]="editLangue.niveau"
                placeholder="Ex: Natif, Courant, B2..."
-               class="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 outline-none transition text-gray-800 font-medium placeholder-gray-300">
+               class="w-full px-4 py-3.5 rounded-xl border border-red-300 focus:border-red-300 focus:ring-4 focus:ring-red-700 outline-none transition text-gray-800 font-medium placeholder-gray-300">
       </div>
 
     </div>
@@ -300,7 +281,7 @@
 
       <button (click)="submitEditLangue()"
 
-              class="flex-1 flex items-center justify-center space-x-2 px-6 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold transition shadow-lg shadow-amber-500/20 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95">
+              class="flex-1 flex items-center justify-center space-x-2 px-6 py-3.5 rounded-xl bg-red-700 hover:bg-amber-600 text-white font-bold transition shadow-lg shadow-amber-500/20 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95">
         <svg *ngIf="editModalLoading" class="animate-spin w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>

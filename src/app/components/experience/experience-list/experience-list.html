@@ -20,18 +20,12 @@
   <div class="flex flex-col md:flex-row justify-between items-end md:items-center mb-10 gap-4">
     <div>
       <div class="flex items-center space-x-3 mb-1">
-        <div class="p-2 bg-purple-500/10 rounded-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-          </svg>
-        </div>
         <h1 class="text-3xl font-black text-gray-900 tracking-tight">Expériences</h1>
       </div>
-      <p class="text-gray-500 font-medium ml-11">Parcours professionnel et expériences</p>
     </div>
 
     <button (click)="openModal()"
-            class="flex items-center space-x-2 bg-purple-500 hover:bg-purple-600 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 shadow-[0_10px_20px_rgba(168,85,247,0.2)] active:scale-95">
+            class="flex items-center space-x-2 bg-red-700 hover:bg-red-300 text-dark px-6 py-3 rounded-xl font-bold transition-all duration-300 shadow-[0_10px_20px_rgba(168,85,247,0.2)] active:scale-95">
       <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" />
       </svg>
@@ -89,25 +83,22 @@
         <tr *ngFor="let experience of experiences; let i = index"
             class="group hover:bg-purple-50/30 transition duration-200">
 
-          <td class="px-8 py-5 font-bold text-gray-300 text-sm">
+          <td class="px-8 py-5 font-bold text-gray-900">
             {{ (i + 1).toString().padStart(2, '0') }}
           </td>
 
           <td class="px-8 py-5">
             <div class="flex items-center space-x-4">
-              <div class="w-10 h-10 rounded-xl bg-purple-500 text-white flex items-center justify-center font-black shadow-sm group-hover:scale-110 transition duration-300">
-                {{ experience.poste.charAt(0).toUpperCase() }}
-              </div>
-              <span class="font-bold text-gray-900 tracking-tight">{{ experience.poste }}</span>
+              <span class="font-bold text-gray-900">{{ experience.poste }}</span>
             </div>
           </td>
 
           <td class="px-8 py-5">
-            <span class="text-gray-600 font-medium">{{ experience.adress_exp }}</span>
+            <span class="font-bold text-gray-900">{{ experience.adress_exp }}</span>
           </td>
 
           <td class="px-8 py-5">
-              <span class="px-3 py-1 bg-purple-50 text-purple-700 border border-purple-100 rounded-full text-xs font-black">
+              <span class="font-bold text-gray-900">
                 {{ experience.date_exp | date:'dd/MM/yyyy' }}
               </span>
           </td>
@@ -115,13 +106,13 @@
           <td class="px-8 py-5 text-center">
             <div class="flex justify-center space-x-2">
               <button (click)="openEditModal(experience)"
-                      class="p-2 text-gray-400 hover:text-amber-500 hover:bg-amber-50 rounded-lg transition">
+                      class="p-2 text-dark hover:text-red-300 hover:bg-amber-50 rounded-lg transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                 </svg>
               </button>
               <button (click)="deleteExperience(experience.exp_id)"
-                      class="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition">
+                      class="p-2 text-dark hover:text-red-300 hover:bg-red-50 rounded-lg transition">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                 </svg>
@@ -152,11 +143,6 @@
 
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center space-x-3">
-        <div class="p-2.5 bg-purple-500/10 rounded-xl">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-          </svg>
-        </div>
         <div>
           <h2 class="text-xl font-black text-gray-900">Nouvelle Expérience</h2>
           <p class="text-gray-400 text-sm">Ajoutez une expérience à votre profil</p>
@@ -184,7 +170,7 @@
         <input type="text"
                [(ngModel)]="newExperience.poste"
                placeholder="Ex: Développeur Web, Chef de projet..."
-               class="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 outline-none transition text-gray-800 font-medium placeholder-gray-300">
+               class="w-full px-4 py-3.5 rounded-xl border border-red-300 focus:border-red-300 focus:ring-4 focus:ring-red-700 outline-none transition text-gray-800 font-medium placeholder-gray-300">
       </div>
 
       <div>
@@ -192,14 +178,14 @@
         <input type="text"
                [(ngModel)]="newExperience.adress_exp"
                placeholder="Ex: Société XYZ, Antananarivo..."
-               class="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 outline-none transition text-gray-800 font-medium placeholder-gray-300">
+               class="w-full px-4 py-3.5 rounded-xl border border-red-300 focus:border-red-300 focus:ring-4 focus:ring-red-700 outline-none transition text-gray-800 font-medium placeholder-gray-300">
       </div>
 
       <div>
         <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">Date</label>
         <input type="date"
                [(ngModel)]="newExperience.date_exp"
-               class="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-purple-500 focus:ring-4 focus:ring-purple-500/10 outline-none transition text-gray-800 font-medium">
+               class="w-full px-4 py-3.5 rounded-xl border border-red-300 focus:border-red-300 focus:ring-4 focus:ring-red-700 outline-none transition text-gray-800 font-medium placeholder-gray-300">
       </div>
 
     </div>
@@ -211,7 +197,7 @@
       </button>
       <button (click)="submitExperience()"
               [disabled]="modalLoading"
-              class="flex-1 flex items-center justify-center space-x-2 px-6 py-3.5 rounded-xl bg-purple-500 hover:bg-purple-600 text-white font-bold transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed active:scale-95">
+              class="flex-1 flex items-center justify-center space-x-2 px-6 py-3.5 rounded-xl bg-red-700 hover:bg-red-300 text-white font-bold transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed active:scale-95">
         <svg *ngIf="modalLoading" class="animate-spin w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
@@ -230,11 +216,6 @@
 
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center space-x-3">
-        <div class="p-2.5 bg-amber-500/10 rounded-xl">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-          </svg>
-        </div>
         <div>
           <h2 class="text-xl font-black text-gray-900">Modifier l'Expérience</h2>
           <p class="text-gray-400 text-sm">Mettez à jour les informations</p>
@@ -262,7 +243,7 @@
         <input type="text"
                [(ngModel)]="editExperience.poste"
                placeholder="Ex: Développeur Web..."
-               class="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 outline-none transition text-gray-800 font-medium placeholder-gray-300">
+               class="w-full px-4 py-3.5 rounded-xl border border-red-300 focus:border-red-300 focus:ring-4 focus:ring-red-700 outline-none transition text-gray-800 font-medium placeholder-gray-300">
       </div>
 
       <div>
@@ -270,14 +251,14 @@
         <input type="text"
                [(ngModel)]="editExperience.adress_exp"
                placeholder="Ex: Société XYZ..."
-               class="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 outline-none transition text-gray-800 font-medium placeholder-gray-300">
+               class="w-full px-4 py-3.5 rounded-xl border border-red-300 focus:border-red-300 focus:ring-4 focus:ring-red-700 outline-none transition text-gray-800 font-medium placeholder-gray-300">
       </div>
 
       <div>
         <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">Date</label>
         <input type="date"
                [(ngModel)]="editExperience.date_exp"
-               class="w-full px-4 py-3.5 rounded-xl border border-gray-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 outline-none transition text-gray-800 font-medium">
+               class="w-full px-4 py-3.5 rounded-xl border border-red-300 focus:border-red-300 focus:ring-4 focus:ring-red-700 outline-none transition text-gray-800 font-medium placeholder-gray-300">
       </div>
 
     </div>
@@ -289,7 +270,7 @@
       </button>
       <button (click)="submitEditExperience()"
               [disabled]="editModalLoading"
-              class="flex-1 flex items-center justify-center space-x-2 px-6 py-3.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-bold transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed active:scale-95">
+              class="flex-1 flex items-center justify-center space-x-2 px-6 py-3.5 rounded-xl bg-red-700 hover:bg-red-300 text-white font-bold transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed active:scale-95">
         <svg *ngIf="editModalLoading" class="animate-spin w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>

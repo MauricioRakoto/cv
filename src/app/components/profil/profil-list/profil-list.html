@@ -1,17 +1,22 @@
 <!-- ===== TOAST ===== -->
 <div *ngIf="toast"
-     class="fixed top-6 right-6 z-[100] flex items-center space-x-3 px-6 py-4 rounded-2xl shadow-2xl font-bold text-sm"
+     class="fixed top-8 right-8 z-[110] flex items-center space-x-4 px-6 py-4 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.2)] backdrop-blur-xl border border-white/20"
      [ngClass]="{
-    'bg-emerald-500 text-white': toast.type === 'success',
-    'bg-red-500 text-white': toast.type === 'error'
+    'bg-emerald-600/90 text-white': toast.type === 'success',
+    'bg-red-600/90 text-white': toast.type === 'error'
   }">
-  <svg *ngIf="toast.type === 'success'" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-  </svg>
-  <svg *ngIf="toast.type === 'error'" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-  </svg>
-  <span>{{ toast.message }}</span>
+  <div class="flex-shrink-0 w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+    <svg *ngIf="toast.type === 'success'" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+    </svg>
+    <svg *ngIf="toast.type === 'error'" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  </div>
+  <div class="flex flex-col">
+    <span class="text-[10px] uppercase font-black tracking-widest opacity-70">{{ toast.type === 'success' ? 'Succès' : 'Erreur' }}</span>
+    <span class="font-bold text-sm">{{ toast.message }}</span>
+  </div>
 </div>
 
 <div class="p-8">
@@ -19,23 +24,14 @@
   <!-- HEADER -->
   <div class="flex flex-col md:flex-row justify-between items-end md:items-center mb-10 gap-4">
     <div>
-      <div class="flex items-center space-x-3 mb-1">
-        <div class="p-2 bg-blue-600/10 rounded-lg">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
-        </div>
-        <h1 class="text-3xl font-black text-gray-900 tracking-tight">Profils</h1>
-      </div>
-      <p class="text-gray-500 font-medium ml-11">Gestion des profils CV</p>
+      <h1 class="text-4xl font-black text-gray-900 tracking-tighter">Profils</h1>
     </div>
-
     <button (click)="openModal()"
-            class="flex items-center space-x-2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold transition-all duration-300 shadow-[0_10px_20px_rgba(37,99,235,0.2)] active:scale-95">
-      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            class="flex items-center h-10 fon space-x-3  px-8 py-4 rounded-2xl font-black transition-all duration-300 shadow-xl active:scale-95 bg-red-700 text-black border hover:bg-red-300">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 group-hover:rotate-90 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 4v16m8-8H4" />
       </svg>
-      <span>Ajouter un profil</span>
+      <span class="text-sm uppercase tracking-wide">Ajouter un profil</span>
     </button>
   </div>
 
@@ -48,13 +44,12 @@
       </svg>
       <p class="font-semibold">{{ error }}</p>
     </div>
-    <button (click)="loadProfils()"
-            class="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-lg text-sm font-bold transition">
+    <button (click)="loadProfils()" class="bg-red-100 hover:bg-red-200 text-red-700 px-4 py-2 rounded-lg text-sm font-bold transition">
       🔄 Réessayer
     </button>
   </div>
 
-  <!-- GRILLE PROFILS -->
+  <!-- VIDE -->
   <div *ngIf="profils.length === 0"
        class="bg-white rounded-3xl border border-gray-100 p-20 text-center shadow-sm">
     <div class="flex flex-col items-center max-w-xs mx-auto text-gray-400">
@@ -68,95 +63,104 @@
     </div>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  <!-- GRILLE -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
     <div *ngFor="let profil of profils"
-         class="bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 overflow-hidden hover:shadow-[0_12px_40px_rgb(0,0,0,0.08)] transition-all duration-300 group">
+         class="relative bg-white rounded-[2rem] border border-gray-100 overflow-hidden hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] transition-all duration-500 group">
 
-      <!-- CARD HEADER -->
-      <div class="bg-gradient-to-br from-blue-600 to-blue-700 p-6 text-white relative">
-        <div class="flex items-center space-x-4">
+      <div class="p-6">
 
-          <!-- PHOTO ou INITIALES -->
-          <div class="w-16 h-16 rounded-2xl overflow-hidden bg-white/20 flex items-center justify-center flex-shrink-0 shadow-lg">
-            <img *ngIf="profil.photo"
-                 [src]="getPhotoUrl(profil.photo)"
-                 class="w-full h-full object-cover"
-                 [alt]="profil.nom">
-            <span *ngIf="!profil.photo"
-                  class="text-2xl font-black text-white">
-              {{ profil.prenom.charAt(0).toUpperCase() }}{{ profil.nom.charAt(0).toUpperCase() }}
+        <!-- AVATAR + NOM -->
+        <div class="flex items-center space-x-4 mb-5">
+          <div class="w-16 h-16 rounded-2xl overflow-hidden bg-red-600 flex-shrink-0 flex items-center justify-center">
+            <img *ngIf="profil.photo" [src]="getPhotoUrl(profil.photo)" class="w-full h-full object-cover">
+            <span *ngIf="!profil.photo" class="text-2xl font-black text-white">
+              {{ profil.prenom.charAt(0) }}{{ profil.nom.charAt(0) }}
             </span>
           </div>
-
-          <div>
-            <h3 class="text-xl font-black tracking-tight">{{ profil.prenom }} {{ profil.nom }}</h3>
-            <p class="text-blue-200 text-sm font-medium">{{ profil.email }}</p>
-            <span class="inline-block mt-1 px-2 py-0.5 bg-white/20 rounded-full text-xs font-bold">
-              {{ profil.status }}
-            </span>
+          <div class="min-w-0">
+            <h3 class="text-xl font-black text-gray-900 tracking-tight group-hover:text-red-600 transition-colors leading-none truncate">
+              {{ profil.prenom }} {{ profil.nom }}
+            </h3>
+            <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest truncate mt-1">
+              {{ profil.email }}
+            </p>
           </div>
         </div>
-      </div>
 
-      <!-- CARD BODY -->
-      <div class="p-6 space-y-3">
-
-        <div class="flex items-center space-x-2 text-sm text-gray-600">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-          </svg>
-          <span>{{ profil.adresse_pr }}</span>
+        <!-- ADRESSE -->
+        <div class="flex items-center gap-2 text-sm text-gray-500 font-medium mb-5">
+          <div class="w-6 h-6 rounded-lg bg-gray-50 flex items-center justify-center text-red-500 flex-shrink-0">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+            </svg>
+          </div>
+          <span class="truncate">{{ profil.adresse_pr }}</span>
         </div>
 
-        <div class="flex items-center space-x-2 text-sm text-gray-600">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
-          </svg>
-          <span>{{ profil.nationalite }}</span>
+        <!-- BADGES RELATIONS -->
+        <div class="flex flex-wrap gap-1.5 mb-5">
+          <ng-container *ngIf="profil.langues && profil.langues.length">
+            <span *ngFor="let l of profil.langues"
+                  class="px-2 py-0.5 bg-blue-50 text-blue-700 text-[10px] font-black rounded-full uppercase tracking-wide">
+              🌍 {{ l.nom_langue }}
+            </span>
+          </ng-container>
+          <ng-container *ngIf="profil.competences && profil.competences.length">
+            <span *ngFor="let c of profil.competences"
+                  class="px-2 py-0.5 bg-indigo-50 text-indigo-700 text-[10px] font-black rounded-full uppercase tracking-wide">
+              💡 {{ c.nom_comp }}
+            </span>
+          </ng-container>
+          <ng-container *ngIf="profil.loisirs && profil.loisirs.length">
+            <span *ngFor="let lo of profil.loisirs"
+                  class="px-2 py-0.5 bg-pink-50 text-pink-700 text-[10px] font-black rounded-full uppercase tracking-wide">
+              🎮 {{ lo.nom_loisirs }}
+            </span>
+          </ng-container>
         </div>
 
-        <div class="flex items-center space-x-2 text-sm text-gray-600">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-          </svg>
-          <span>{{ profil.date_birth | date:'dd/MM/yyyy' }}</span>
+        <!-- BOUTONS -->
+        <div class="grid grid-cols-3 gap-2">
+          <button (click)="openDetailModal(profil)"
+                  class="col-span-3 bg-gray-900 text-white py-3 rounded-xl font-black text-[10px] uppercase tracking-[0.2em] hover:bg-red-600 transition-all active:scale-95 shadow-lg">
+            Voir le profil
+          </button>
+          <button (click)="openEditModal(profil)"
+                  class="flex items-center justify-center py-2.5 bg-gray-100 text-gray-600 rounded-xl hover:bg-amber-100 hover:text-amber-600 transition-all">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+            </svg>
+          </button>
+          <button (click)="deleteProfil(profil.profil_id)"
+                  class="col-span-2 flex items-center justify-center py-2.5 bg-gray-100 text-gray-400 rounded-xl hover:bg-red-100 hover:text-red-600 transition-all">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+            </svg>
+            <span class="text-xs font-bold ml-1">Supprimer</span>
+          </button>
         </div>
-
-      </div>
-
-      <!-- CARD FOOTER -->
-      <div class="px-6 pb-6 flex space-x-2">
-
-        <button (click)="openDetailModal(profil)"
-                class="flex-1 flex items-center justify-center space-x-1 py-2.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-600 font-bold text-sm transition">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-          </svg>
-          <span>Voir</span>
-        </button>
-
-        <button (click)="openEditModal(profil)"
-                class="flex-1 flex items-center justify-center space-x-1 py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-600 font-bold text-sm transition">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-          </svg>
-          <span>Modifier</span>
-        </button>
-
-        <button (click)="deleteProfil(profil.profil_id)"
-                class="flex-1 flex items-center justify-center space-x-1 py-2.5 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 font-bold text-sm transition">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-          </svg>
-          <span>Supprimer</span>
-        </button>
 
       </div>
     </div>
   </div>
 
 </div>
+
+<!-- ===== HELPER CHECKBOXES ===== -->
+<ng-template #checkboxGroup let-items="items" let-selectedIds="selectedIds" let-idKey="idKey" let-labelKey="labelKey">
+  <div class="grid grid-cols-2 gap-2 max-h-36 overflow-y-auto p-1">
+    <label *ngFor="let item of items"
+           class="flex items-center space-x-2 cursor-pointer p-2 rounded-lg hover:bg-gray-50 transition"
+           [class.bg-blue-50]="isSelected(selectedIds, item[idKey])">
+      <input type="checkbox"
+             [checked]="isSelected(selectedIds, item[idKey])"
+             (change)="toggleSelection(selectedIds, item[idKey])"
+             class="w-4 h-4 rounded text-blue-600">
+      <span class="text-sm font-medium text-gray-700 truncate">{{ item[labelKey] }}</span>
+    </label>
+  </div>
+</ng-template>
 
 <!-- ===== MODAL AJOUT ===== -->
 <div *ngIf="showModal" class="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -165,14 +169,8 @@
 
     <div class="flex justify-between items-center mb-8">
       <div class="flex items-center space-x-3">
-        <div class="p-2.5 bg-blue-600/10 rounded-xl">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
-        </div>
         <div>
-          <h2 class="text-xl font-black text-gray-900">Nouveau Profil</h2>
-          <p class="text-gray-400 text-sm">Créez un nouveau profil CV</p>
+          <h2 class="text-xl font-black text-gray-900">Créez un nouveau profil CV</h2>
         </div>
       </div>
       <button (click)="closeModal()" class="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl transition">
@@ -183,7 +181,7 @@
     </div>
 
     <div *ngIf="modalError"
-         class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-xl mb-6 flex items-center space-x-3">
+         class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-xl mb-6">
       <p class="text-sm font-semibold">{{ modalError }}</p>
     </div>
 
@@ -198,7 +196,7 @@
           </svg>
         </div>
         <div>
-          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">Photo de profil</label>
+          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">Photo</label>
           <input type="file" accept="image/*" (change)="onPhotoChange($event)"
                  class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-bold file:bg-blue-50 file:text-blue-600 hover:file:bg-blue-100">
         </div>
@@ -230,9 +228,15 @@
           </select>
         </div>
         <div>
-          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">Statut</label>
-          <input type="text" [(ngModel)]="newProfil.status" placeholder="Ex: Disponible"
-                 class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition text-gray-800 font-medium placeholder-gray-300">
+          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">Statut marital</label>
+          <select [(ngModel)]="newProfil.status"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition text-gray-800 font-medium bg-white">
+            <option value="">Sélectionner</option>
+            <option value="Célibataire">Célibataire</option>
+            <option value="Marié">Marié</option>
+            <option value="Divorcé">Divorcé</option>
+            <option value="Veuf">Veuf</option>
+          </select>
         </div>
       </div>
 
@@ -243,7 +247,7 @@
                class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition text-gray-800 font-medium placeholder-gray-300">
       </div>
 
-      <!-- DATE NAISSANCE / NATIONALITE -->
+      <!-- DATE / NATIONALITE -->
       <div class="grid grid-cols-2 gap-4">
         <div>
           <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">Date de naissance</label>
@@ -252,8 +256,12 @@
         </div>
         <div>
           <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">Nationalité</label>
-          <input type="text" [(ngModel)]="newProfil.nationalite" placeholder="Ex: Malagasy"
-                 class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition text-gray-800 font-medium placeholder-gray-300">
+          <select [(ngModel)]="newProfil.nationalite"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition text-gray-800 font-medium bg-white">
+            <option value="">Sélectionner</option>
+            <option value="Malagasy">Malagasy</option>
+            <option value="Français">Français</option>
+          </select>
         </div>
       </div>
 
@@ -271,55 +279,136 @@
                   class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition text-gray-800 font-medium placeholder-gray-300 resize-none"></textarea>
       </div>
 
-      <!-- RELATIONS -->
+      <!-- ===== CHECKBOXES MULTIPLES ===== -->
       <div class="grid grid-cols-2 gap-4">
 
-        <div>
-          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">Langue</label>
-          <select [(ngModel)]="newProfil.langue_id"
-                  class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition text-gray-800 font-medium bg-white">
-            <option value="">Sélectionner</option>
-            <option *ngFor="let langue of langues" [value]="langue.langue_id">
-              {{ langue.nom_langue }} — {{ langue.niveau }}
-            </option>
-          </select>
+        <!-- LANGUES -->
+        <div class="col-span-2">
+          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">
+            🌍 Langues
+            <span class="ml-2 text-blue-500 font-normal normal-case text-xs">({{ newProfil.langue_id.length }} sélectionnée(s))</span>
+          </label>
+          <div class="border border-gray-200 rounded-xl p-3 grid grid-cols-3 gap-2 max-h-32 overflow-y-auto">
+            <label *ngFor="let langue of langues"
+                   class="flex items-center space-x-2 cursor-pointer p-2 rounded-lg hover:bg-blue-50 transition"
+                   [class.bg-blue-50]="isSelected(newProfil.langue_id, langue.langue_id)"
+                   [class.border]="isSelected(newProfil.langue_id, langue.langue_id)"
+                   [class.border-blue-300]="isSelected(newProfil.langue_id, langue.langue_id)">
+              <input type="checkbox"
+                     [checked]="isSelected(newProfil.langue_id, langue.langue_id)"
+                     (change)="toggleSelection(newProfil.langue_id, langue.langue_id)"
+                     class="w-4 h-4 rounded accent-blue-600">
+              <span class="text-xs font-semibold text-gray-700 truncate">{{ langue.nom_langue }}</span>
+            </label>
+          </div>
         </div>
 
-        <div>
-          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">Qualité</label>
-          <select [(ngModel)]="newProfil.qualite_id"
-                  class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition text-gray-800 font-medium bg-white">
-            <option value="">Sélectionner</option>
-            <option *ngFor="let qualite of qualites" [value]="qualite.qualite_id">
-              {{ qualite.nom_qualite }}
-            </option>
-          </select>
+        <!-- QUALITES -->
+        <div class="col-span-2">
+          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">
+            ⭐ Qualités
+            <span class="ml-2 text-yellow-500 font-normal normal-case text-xs">({{ newProfil.qualite_id.length }} sélectionnée(s))</span>
+          </label>
+          <div class="border border-gray-200 rounded-xl p-3 grid grid-cols-3 gap-2 max-h-32 overflow-y-auto">
+            <label *ngFor="let qualite of qualites"
+                   class="flex items-center space-x-2 cursor-pointer p-2 rounded-lg hover:bg-yellow-50 transition"
+                   [class.bg-yellow-50]="isSelected(newProfil.qualite_id, qualite.qualite_id)"
+                   [class.border]="isSelected(newProfil.qualite_id, qualite.qualite_id)"
+                   [class.border-yellow-300]="isSelected(newProfil.qualite_id, qualite.qualite_id)">
+              <input type="checkbox"
+                     [checked]="isSelected(newProfil.qualite_id, qualite.qualite_id)"
+                     (change)="toggleSelection(newProfil.qualite_id, qualite.qualite_id)"
+                     class="w-4 h-4 rounded accent-yellow-500">
+              <span class="text-xs font-semibold text-gray-700 truncate">{{ qualite.nom_qualite }}</span>
+            </label>
+          </div>
         </div>
 
-        <div>
-          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">Etude</label>
-          <select [(ngModel)]="newProfil.etude_id"
-                  class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition text-gray-800 font-medium bg-white">
-            <option value="">Sélectionner</option>
-            <option *ngFor="let etude of etudes" [value]="etude.etude_id">
-              {{ etude.etude }} — {{ etude.adresse_et }}
-            </option>
-          </select>
+        <!-- ETUDES -->
+        <div class="col-span-2">
+          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">
+            🎓 Etudes
+            <span class="ml-2 text-emerald-500 font-normal normal-case text-xs">({{ newProfil.etude_id.length }} sélectionnée(s))</span>
+          </label>
+          <div class="border border-gray-200 rounded-xl p-3 grid grid-cols-2 gap-2 max-h-32 overflow-y-auto">
+            <label *ngFor="let etude of etudes"
+                   class="flex items-center space-x-2 cursor-pointer p-2 rounded-lg hover:bg-emerald-50 transition"
+                   [class.bg-emerald-50]="isSelected(newProfil.etude_id, etude.etude_id)"
+                   [class.border]="isSelected(newProfil.etude_id, etude.etude_id)"
+                   [class.border-emerald-300]="isSelected(newProfil.etude_id, etude.etude_id)">
+              <input type="checkbox"
+                     [checked]="isSelected(newProfil.etude_id, etude.etude_id)"
+                     (change)="toggleSelection(newProfil.etude_id, etude.etude_id)"
+                     class="w-4 h-4 rounded accent-emerald-600">
+              <span class="text-xs font-semibold text-gray-700 truncate">{{ etude.etude }}</span>
+            </label>
+          </div>
         </div>
 
+        <!-- EXPERIENCES -->
+        <div class="col-span-2">
+          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">
+            💼 Expériences
+            <span class="ml-2 text-purple-500 font-normal normal-case text-xs">({{ newProfil.exp_id.length }} sélectionnée(s))</span>
+          </label>
+          <div class="border border-gray-200 rounded-xl p-3 grid grid-cols-2 gap-2 max-h-32 overflow-y-auto">
+            <label *ngFor="let exp of experiences"
+                   class="flex items-center space-x-2 cursor-pointer p-2 rounded-lg hover:bg-purple-50 transition"
+                   [class.bg-purple-50]="isSelected(newProfil.exp_id, exp.exp_id)"
+                   [class.border]="isSelected(newProfil.exp_id, exp.exp_id)"
+                   [class.border-purple-300]="isSelected(newProfil.exp_id, exp.exp_id)">
+              <input type="checkbox"
+                     [checked]="isSelected(newProfil.exp_id, exp.exp_id)"
+                     (change)="toggleSelection(newProfil.exp_id, exp.exp_id)"
+                     class="w-4 h-4 rounded accent-purple-600">
+              <span class="text-xs font-semibold text-gray-700 truncate">{{ exp.poste }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- COMPETENCES -->
         <div>
-          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">Expérience</label>
-          <select [(ngModel)]="newProfil.exp_id"
-                  class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none transition text-gray-800 font-medium bg-white">
-            <option value="">Sélectionner</option>
-            <option *ngFor="let exp of experiences" [value]="exp.exp_id">
-              {{ exp.poste }} — {{ exp.adress_exp }}
-            </option>
-          </select>
+          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">
+            💡 Compétences
+            <span class="ml-2 text-indigo-500 font-normal normal-case text-xs">({{ newProfil.competence_id.length }})</span>
+          </label>
+          <div class="border border-gray-200 rounded-xl p-3 grid grid-cols-1 gap-2 max-h-32 overflow-y-auto">
+            <label *ngFor="let comp of competences"
+                   class="flex items-center space-x-2 cursor-pointer p-2 rounded-lg hover:bg-indigo-50 transition"
+                   [class.bg-indigo-50]="isSelected(newProfil.competence_id, comp.competence_id)"
+                   [class.border]="isSelected(newProfil.competence_id, comp.competence_id)"
+                   [class.border-indigo-300]="isSelected(newProfil.competence_id, comp.competence_id)">
+              <input type="checkbox"
+                     [checked]="isSelected(newProfil.competence_id, comp.competence_id)"
+                     (change)="toggleSelection(newProfil.competence_id, comp.competence_id)"
+                     class="w-4 h-4 rounded accent-indigo-600">
+              <span class="text-xs font-semibold text-gray-700 truncate">{{ comp.nom_comp }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- LOISIRS -->
+        <div>
+          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">
+            🎮 Loisirs
+            <span class="ml-2 text-pink-500 font-normal normal-case text-xs">({{ newProfil.loisirs_id.length }})</span>
+          </label>
+          <div class="border border-gray-200 rounded-xl p-3 grid grid-cols-1 gap-2 max-h-32 overflow-y-auto">
+            <label *ngFor="let loisir of loisirs"
+                   class="flex items-center space-x-2 cursor-pointer p-2 rounded-lg hover:bg-pink-50 transition"
+                   [class.bg-pink-50]="isSelected(newProfil.loisirs_id, loisir.loisirs_id)"
+                   [class.border]="isSelected(newProfil.loisirs_id, loisir.loisirs_id)"
+                   [class.border-pink-300]="isSelected(newProfil.loisirs_id, loisir.loisirs_id)">
+              <input type="checkbox"
+                     [checked]="isSelected(newProfil.loisirs_id, loisir.loisirs_id)"
+                     (change)="toggleSelection(newProfil.loisirs_id, loisir.loisirs_id)"
+                     class="w-4 h-4 rounded accent-pink-600">
+              <span class="text-xs font-semibold text-gray-700 truncate">{{ loisir.nom_loisirs }}</span>
+            </label>
+          </div>
         </div>
 
       </div>
-
     </div>
 
     <div class="flex space-x-3 mt-8">
@@ -329,7 +418,7 @@
       </button>
       <button (click)="submitProfil()"
               [disabled]="modalLoading"
-              class="flex-1 flex items-center justify-center space-x-2 px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition shadow-lg disabled:opacity-50 disabled:cursor-not-allowed active:scale-95">
+              class="flex-1 flex items-center justify-center space-x-2 px-6 py-3.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold transition shadow-lg disabled:opacity-50 active:scale-95">
         <svg *ngIf="modalLoading" class="animate-spin w-5 h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
@@ -365,8 +454,7 @@
       </button>
     </div>
 
-    <div *ngIf="editModalError"
-         class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-xl mb-6">
+    <div *ngIf="editModalError" class="bg-red-50 border-l-4 border-red-500 text-red-700 p-4 rounded-xl mb-6">
       <p class="text-sm font-semibold">{{ editModalError }}</p>
     </div>
 
@@ -381,7 +469,7 @@
           </svg>
         </div>
         <div>
-          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">Photo de profil</label>
+          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">Photo</label>
           <input type="file" accept="image/*" (change)="onEditPhotoChange($event)"
                  class="text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:font-bold file:bg-amber-50 file:text-amber-600 hover:file:bg-amber-100">
         </div>
@@ -412,9 +500,14 @@
           </select>
         </div>
         <div>
-          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">Statut</label>
-          <input type="text" [(ngModel)]="editProfil.status"
-                 class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 outline-none transition text-gray-800 font-medium">
+          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">Statut marital</label>
+          <select [(ngModel)]="editProfil.status"
+                  class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 outline-none transition text-gray-800 font-medium bg-white">
+            <option value="Célibataire">Célibataire</option>
+            <option value="Marié">Marié</option>
+            <option value="Divorcé">Divorcé</option>
+            <option value="Veuf">Veuf</option>
+          </select>
         </div>
       </div>
 
@@ -453,46 +546,136 @@
                   class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/10 outline-none transition text-gray-800 font-medium resize-none"></textarea>
       </div>
 
-      <!-- RELATIONS -->
+      <!-- ===== CHECKBOXES EDIT ===== -->
       <div class="grid grid-cols-2 gap-4">
-        <div>
-          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">Langue</label>
-          <select [(ngModel)]="editProfil.langue_id"
-                  class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-amber-500 outline-none transition text-gray-800 font-medium bg-white">
-            <option *ngFor="let langue of langues" [value]="langue.langue_id">
-              {{ langue.nom_langue }} — {{ langue.niveau }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">Qualité</label>
-          <select [(ngModel)]="editProfil.qualite_id"
-                  class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-amber-500 outline-none transition text-gray-800 font-medium bg-white">
-            <option *ngFor="let qualite of qualites" [value]="qualite.qualite_id">
-              {{ qualite.nom_qualite }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">Etude</label>
-          <select [(ngModel)]="editProfil.etude_id"
-                  class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-amber-500 outline-none transition text-gray-800 font-medium bg-white">
-            <option *ngFor="let etude of etudes" [value]="etude.etude_id">
-              {{ etude.etude }} — {{ etude.adresse_et }}
-            </option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">Expérience</label>
-          <select [(ngModel)]="editProfil.exp_id"
-                  class="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-amber-500 outline-none transition text-gray-800 font-medium bg-white">
-            <option *ngFor="let exp of experiences" [value]="exp.exp_id">
-              {{ exp.poste }} — {{ exp.adress_exp }}
-            </option>
-          </select>
-        </div>
-      </div>
 
+        <!-- LANGUES -->
+        <div class="col-span-2">
+          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">
+            🌍 Langues
+            <span class="ml-2 text-blue-500 font-normal normal-case text-xs">({{ editProfil.langue_id.length }} sélectionnée(s))</span>
+          </label>
+          <div class="border border-gray-200 rounded-xl p-3 grid grid-cols-3 gap-2 max-h-32 overflow-y-auto">
+            <label *ngFor="let langue of langues"
+                   class="flex items-center space-x-2 cursor-pointer p-2 rounded-lg hover:bg-blue-50 transition"
+                   [class.bg-blue-50]="isSelected(editProfil.langue_id, langue.langue_id)"
+                   [class.border]="isSelected(editProfil.langue_id, langue.langue_id)"
+                   [class.border-blue-300]="isSelected(editProfil.langue_id, langue.langue_id)">
+              <input type="checkbox"
+                     [checked]="isSelected(editProfil.langue_id, langue.langue_id)"
+                     (change)="toggleSelection(editProfil.langue_id, langue.langue_id)"
+                     class="w-4 h-4 rounded accent-blue-600">
+              <span class="text-xs font-semibold text-gray-700 truncate">{{ langue.nom_langue }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- QUALITES -->
+        <div class="col-span-2">
+          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">
+            ⭐ Qualités
+            <span class="ml-2 text-yellow-500 font-normal normal-case text-xs">({{ editProfil.qualite_id.length }} sélectionnée(s))</span>
+          </label>
+          <div class="border border-gray-200 rounded-xl p-3 grid grid-cols-3 gap-2 max-h-32 overflow-y-auto">
+            <label *ngFor="let qualite of qualites"
+                   class="flex items-center space-x-2 cursor-pointer p-2 rounded-lg hover:bg-yellow-50 transition"
+                   [class.bg-yellow-50]="isSelected(editProfil.qualite_id, qualite.qualite_id)"
+                   [class.border]="isSelected(editProfil.qualite_id, qualite.qualite_id)"
+                   [class.border-yellow-300]="isSelected(editProfil.qualite_id, qualite.qualite_id)">
+              <input type="checkbox"
+                     [checked]="isSelected(editProfil.qualite_id, qualite.qualite_id)"
+                     (change)="toggleSelection(editProfil.qualite_id, qualite.qualite_id)"
+                     class="w-4 h-4 rounded accent-yellow-500">
+              <span class="text-xs font-semibold text-gray-700 truncate">{{ qualite.nom_qualite }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- ETUDES -->
+        <div class="col-span-2">
+          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">
+            🎓 Etudes
+            <span class="ml-2 text-emerald-500 font-normal normal-case text-xs">({{ editProfil.etude_id.length }} sélectionnée(s))</span>
+          </label>
+          <div class="border border-gray-200 rounded-xl p-3 grid grid-cols-2 gap-2 max-h-32 overflow-y-auto">
+            <label *ngFor="let etude of etudes"
+                   class="flex items-center space-x-2 cursor-pointer p-2 rounded-lg hover:bg-emerald-50 transition"
+                   [class.bg-emerald-50]="isSelected(editProfil.etude_id, etude.etude_id)"
+                   [class.border]="isSelected(editProfil.etude_id, etude.etude_id)"
+                   [class.border-emerald-300]="isSelected(editProfil.etude_id, etude.etude_id)">
+              <input type="checkbox"
+                     [checked]="isSelected(editProfil.etude_id, etude.etude_id)"
+                     (change)="toggleSelection(editProfil.etude_id, etude.etude_id)"
+                     class="w-4 h-4 rounded accent-emerald-600">
+              <span class="text-xs font-semibold text-gray-700 truncate">{{ etude.etude }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- EXPERIENCES -->
+        <div class="col-span-2">
+          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">
+            💼 Expériences
+            <span class="ml-2 text-purple-500 font-normal normal-case text-xs">({{ editProfil.exp_id.length }} sélectionnée(s))</span>
+          </label>
+          <div class="border border-gray-200 rounded-xl p-3 grid grid-cols-2 gap-2 max-h-32 overflow-y-auto">
+            <label *ngFor="let exp of experiences"
+                   class="flex items-center space-x-2 cursor-pointer p-2 rounded-lg hover:bg-purple-50 transition"
+                   [class.bg-purple-50]="isSelected(editProfil.exp_id, exp.exp_id)"
+                   [class.border]="isSelected(editProfil.exp_id, exp.exp_id)"
+                   [class.border-purple-300]="isSelected(editProfil.exp_id, exp.exp_id)">
+              <input type="checkbox"
+                     [checked]="isSelected(editProfil.exp_id, exp.exp_id)"
+                     (change)="toggleSelection(editProfil.exp_id, exp.exp_id)"
+                     class="w-4 h-4 rounded accent-purple-600">
+              <span class="text-xs font-semibold text-gray-700 truncate">{{ exp.poste }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- COMPETENCES -->
+        <div>
+          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">
+            💡 Compétences
+            <span class="ml-2 text-indigo-500 font-normal normal-case text-xs">({{ editProfil.competence_id.length }})</span>
+          </label>
+          <div class="border border-gray-200 rounded-xl p-3 grid grid-cols-1 gap-2 max-h-32 overflow-y-auto">
+            <label *ngFor="let comp of competences"
+                   class="flex items-center space-x-2 cursor-pointer p-2 rounded-lg hover:bg-indigo-50 transition"
+                   [class.bg-indigo-50]="isSelected(editProfil.competence_id, comp.competence_id)"
+                   [class.border]="isSelected(editProfil.competence_id, comp.competence_id)"
+                   [class.border-indigo-300]="isSelected(editProfil.competence_id, comp.competence_id)">
+              <input type="checkbox"
+                     [checked]="isSelected(editProfil.competence_id, comp.competence_id)"
+                     (change)="toggleSelection(editProfil.competence_id, comp.competence_id)"
+                     class="w-4 h-4 rounded accent-indigo-600">
+              <span class="text-xs font-semibold text-gray-700 truncate">{{ comp.nom_comp }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- LOISIRS -->
+        <div>
+          <label class="block text-sm font-black text-gray-700 uppercase tracking-wider mb-2">
+            🎮 Loisirs
+            <span class="ml-2 text-pink-500 font-normal normal-case text-xs">({{ editProfil.loisirs_id.length }})</span>
+          </label>
+          <div class="border border-gray-200 rounded-xl p-3 grid grid-cols-1 gap-2 max-h-32 overflow-y-auto">
+            <label *ngFor="let loisir of loisirs"
+                   class="flex items-center space-x-2 cursor-pointer p-2 rounded-lg hover:bg-pink-50 transition"
+                   [class.bg-pink-50]="isSelected(editProfil.loisirs_id, loisir.loisirs_id)"
+                   [class.border]="isSelected(editProfil.loisirs_id, loisir.loisirs_id)"
+                   [class.border-pink-300]="isSelected(editProfil.loisirs_id, loisir.loisirs_id)">
+              <input type="checkbox"
+                     [checked]="isSelected(editProfil.loisirs_id, loisir.loisirs_id)"
+                     (change)="toggleSelection(editProfil.loisirs_id, loisir.loisirs_id)"
+                     class="w-4 h-4 rounded accent-pink-600">
+              <span class="text-xs font-semibold text-gray-700 truncate">{{ loisir.nom_loisirs }}</span>
+            </label>
+          </div>
+        </div>
+
+      </div>
     </div>
 
     <div class="flex space-x-3 mt-8">
@@ -519,7 +702,7 @@
   <div class="absolute inset-0 bg-gray-900/60 backdrop-blur-sm" (click)="closeDetailModal()"></div>
   <div class="relative bg-white rounded-3xl shadow-2xl w-full max-w-lg p-8 max-h-[90vh] overflow-y-auto">
 
-    <!-- HEADER DETAIL -->
+    <!-- HEADER -->
     <div class="flex justify-between items-start mb-8">
       <div class="flex items-center space-x-4">
         <div class="w-16 h-16 rounded-2xl overflow-hidden bg-blue-100 flex items-center justify-center flex-shrink-0">
@@ -540,16 +723,16 @@
       </button>
     </div>
 
-    <!-- INFOS -->
     <div class="space-y-4">
 
+      <!-- INFOS DE BASE -->
       <div class="grid grid-cols-2 gap-4">
         <div class="bg-gray-50 rounded-xl p-4">
           <p class="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Sexe</p>
           <p class="font-bold text-gray-900">{{ selectedProfil.sexe }}</p>
         </div>
         <div class="bg-gray-50 rounded-xl p-4">
-          <p class="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Statut</p>
+          <p class="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Statut marital</p>
           <p class="font-bold text-gray-900">{{ selectedProfil.status }}</p>
         </div>
         <div class="bg-gray-50 rounded-xl p-4">
@@ -572,26 +755,69 @@
         <p class="text-gray-700">{{ selectedProfil.desc }}</p>
       </div>
 
-      <!-- RELATIONS -->
-      <div class="grid grid-cols-2 gap-4" *ngIf="selectedProfil.langue || selectedProfil.qualite || selectedProfil.etude || selectedProfil.experience">
-        <div class="bg-blue-50 rounded-xl p-4" *ngIf="selectedProfil.langue">
-          <p class="text-xs font-black text-blue-400 uppercase tracking-widest mb-1">🌍 Langue</p>
-          <p class="font-bold text-gray-900">{{ selectedProfil.langue.nom_langue }}</p>
-          <p class="text-xs text-gray-500">{{ selectedProfil.langue.niveau }}</p>
+      <!-- LANGUES -->
+      <div class="bg-blue-50 rounded-xl p-4" *ngIf="selectedProfil.langues && selectedProfil.langues.length">
+        <p class="text-xs font-black text-blue-500 uppercase tracking-widest mb-3">🌍 Langues</p>
+        <div class="flex flex-wrap gap-2">
+          <span *ngFor="let l of selectedProfil.langues"
+                class="px-3 py-1 bg-blue-100 text-blue-800 text-xs font-black rounded-full">
+            {{ l.nom_langue }} — {{ l.niveau }}
+          </span>
         </div>
-        <div class="bg-yellow-50 rounded-xl p-4" *ngIf="selectedProfil.qualite">
-          <p class="text-xs font-black text-yellow-500 uppercase tracking-widest mb-1">⭐ Qualité</p>
-          <p class="font-bold text-gray-900">{{ selectedProfil.qualite.nom_qualite }}</p>
+      </div>
+
+      <!-- QUALITES -->
+      <div class="bg-yellow-50 rounded-xl p-4" *ngIf="selectedProfil.qualites && selectedProfil.qualites.length">
+        <p class="text-xs font-black text-yellow-600 uppercase tracking-widest mb-3">⭐ Qualités</p>
+        <div class="flex flex-wrap gap-2">
+          <span *ngFor="let q of selectedProfil.qualites"
+                class="px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-black rounded-full">
+            {{ q.nom_qualite }}
+          </span>
         </div>
-        <div class="bg-emerald-50 rounded-xl p-4" *ngIf="selectedProfil.etude">
-          <p class="text-xs font-black text-emerald-500 uppercase tracking-widest mb-1">🎓 Etude</p>
-          <p class="font-bold text-gray-900">{{ selectedProfil.etude.etude }}</p>
-          <p class="text-xs text-gray-500">{{ selectedProfil.etude.adresse_et }}</p>
+      </div>
+
+      <!-- ETUDES -->
+      <div class="bg-emerald-50 rounded-xl p-4" *ngIf="selectedProfil.etudes && selectedProfil.etudes.length">
+        <p class="text-xs font-black text-emerald-600 uppercase tracking-widest mb-3">🎓 Etudes</p>
+        <div class="space-y-1">
+          <div *ngFor="let e of selectedProfil.etudes" class="flex justify-between items-center">
+            <span class="text-sm font-bold text-gray-900">{{ e.etude }}</span>
+            <span class="text-xs text-gray-500">{{ e.adresse_et }}</span>
+          </div>
         </div>
-        <div class="bg-purple-50 rounded-xl p-4" *ngIf="selectedProfil.experience">
-          <p class="text-xs font-black text-purple-500 uppercase tracking-widest mb-1">💼 Expérience</p>
-          <p class="font-bold text-gray-900">{{ selectedProfil.experience.poste }}</p>
-          <p class="text-xs text-gray-500">{{ selectedProfil.experience.adress_exp }}</p>
+      </div>
+
+      <!-- EXPERIENCES -->
+      <div class="bg-purple-50 rounded-xl p-4" *ngIf="selectedProfil.experiences && selectedProfil.experiences.length">
+        <p class="text-xs font-black text-purple-600 uppercase tracking-widest mb-3">💼 Expériences</p>
+        <div class="space-y-1">
+          <div *ngFor="let e of selectedProfil.experiences" class="flex justify-between items-center">
+            <span class="text-sm font-bold text-gray-900">{{ e.poste }}</span>
+            <span class="text-xs text-gray-500">{{ e.adress_exp }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMPETENCES -->
+      <div class="bg-indigo-50 rounded-xl p-4" *ngIf="selectedProfil.competences && selectedProfil.competences.length">
+        <p class="text-xs font-black text-indigo-600 uppercase tracking-widest mb-3">💡 Compétences</p>
+        <div class="flex flex-wrap gap-2">
+          <span *ngFor="let c of selectedProfil.competences"
+                class="px-3 py-1 bg-indigo-100 text-indigo-800 text-xs font-black rounded-full">
+            {{ c.nom_comp }}
+          </span>
+        </div>
+      </div>
+
+      <!-- LOISIRS -->
+      <div class="bg-pink-50 rounded-xl p-4" *ngIf="selectedProfil.loisirs && selectedProfil.loisirs.length">
+        <p class="text-xs font-black text-pink-600 uppercase tracking-widest mb-3">🎮 Loisirs</p>
+        <div class="flex flex-wrap gap-2">
+          <span *ngFor="let lo of selectedProfil.loisirs"
+                class="px-3 py-1 bg-pink-100 text-pink-800 text-xs font-black rounded-full">
+            {{ lo.nom_loisirs }}
+          </span>
         </div>
       </div>
 

@@ -1,0 +1,335 @@
+<!-- LOADING -->
+<div *ngIf="loading" class="flex justify-center items-center min-h-[60vh]">
+  <div class="flex flex-col items-center space-y-4">
+    <div class="relative">
+      <div class="w-14 h-14 border-4 border-blue-100 rounded-full"></div>
+      <div class="w-14 h-14 border-4 border-blue-600 border-t-transparent rounded-full animate-spin absolute top-0"></div>
+    </div>
+    <span class="text-gray-500 font-bold text-sm uppercase tracking-widest animate-pulse">Chargement du CV...</span>
+  </div>
+</div>
+
+<!-- ERREUR -->
+<div *ngIf="error" class="p-8">
+  <div class="bg-red-50 border-l-4 border-red-500 text-red-700 p-6 rounded-2xl flex items-center space-x-4">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+    <div>
+      <p class="font-black text-lg">{{ error }}</p>
+      <a [routerLink]="['/']" class="mt-1 inline-flex items-center space-x-1 text-sm font-bold underline">
+        <span>← Retour à l'accueil</span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- CV -->
+<div *ngIf="!loading && profil" class="p-6">
+
+  <!-- ===== BARRE D'ACTIONS ===== -->
+  <div class="flex justify-between items-center mb-6 print:hidden">
+    <a [routerLink]="['/']"
+       class="flex items-center space-x-2 bg-white border border-gray-200 text-gray-600 hover:text-gray-900 hover:border-gray-300 px-4 py-2.5 rounded-xl font-bold text-sm transition shadow-sm">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7" />
+      </svg>
+      <span>Retour</span>
+    </a>
+
+    <div class="flex items-center space-x-3">
+      <a [routerLink]="['/profils']"
+         class="flex items-center space-x-2 bg-white border border-gray-200 text-gray-600 hover:text-amber-600 hover:border-amber-300 px-4 py-2.5 rounded-xl font-bold text-sm transition shadow-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+        </svg>
+        <span>Modifier</span>
+      </a>
+      <button (click)="print()"
+              class="flex items-center space-x-2 bg-gray-900 hover:bg-blue-600 text-white px-5 py-2.5 rounded-xl font-bold text-sm transition active:scale-95 shadow-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+        </svg>
+        <span>Imprimer / PDF</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== PAGE CV ===== -->
+  <div class="max-w-5xl mx-auto bg-white shadow-2xl rounded-3xl overflow-hidden print:shadow-none print:rounded-none print:max-w-none">
+
+    <div class="flex min-h-screen">
+
+      <!-- ========== SIDEBAR GAUCHE ========== -->
+      <div class="w-80 flex-shrink-0 bg-gray-900 flex flex-col">
+
+        <!-- PHOTO + NOM -->
+        <div class="p-8 text-center">
+          <div class="relative inline-block mb-6">
+            <div class="w-36 h-36 rounded-3xl overflow-hidden mx-auto shadow-2xl flex items-center justify-center"
+                 [class.bg-gradient-to-br]="!profil.photo"
+                 [class.from-blue-600]="!profil.photo"
+                 [class.to-blue-700]="!profil.photo">
+              <img *ngIf="profil.photo" [src]="getPhotoUrl(profil.photo)" class="w-full h-full object-cover">
+              <span *ngIf="!profil.photo" class="text-5xl font-black text-white">
+                {{ profil.prenom.charAt(0) }}{{ profil.nom.charAt(0) }}
+              </span>
+            </div>
+            <div class="absolute -bottom-2 -right-2 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center shadow-lg">
+              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4"/>
+              </svg>
+            </div>
+          </div>
+
+          <h1 class="text-2xl font-black text-white tracking-tight leading-tight mb-1">
+            {{ profil.prenom }} <span class="text-blue-400">{{ profil.nom }}</span>
+          </h1>
+
+          <div class="inline-flex items-center space-x-1.5 px-3 py-1.5 bg-blue-600/20 border border-blue-500/30 rounded-full mt-2">
+            <div class="w-1.5 h-1.5 bg-blue-400 rounded-full animate-pulse"></div>
+            <span class="text-[10px] font-black uppercase tracking-widest text-blue-400">{{ profil.status }}</span>
+          </div>
+        </div>
+
+        <!-- SEPARATEUR -->
+        <div class="mx-6 border-t border-white/10 mb-6"></div>
+
+        <!-- CONTACT -->
+        <div class="px-6 mb-6">
+          <h2 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-4">Contact</h2>
+          <div class="space-y-3">
+
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 rounded-lg bg-blue-600/20 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                </svg>
+              </div>
+              <p class="text-xs font-semibold text-gray-300 break-all">{{ profil.email }}</p>
+            </div>
+
+            <div class="flex items-center space-x-3">
+              <div class="w-8 h-8 rounded-lg bg-blue-600/20 flex items-center justify-center flex-shrink-0">
+                <svg class="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                </svg>
+              </div>
+              <p class="text-xs font-semibold text-gray-300">{{ profil.adresse_pr }}</p>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- SEPARATEUR -->
+        <div class="mx-6 border-t border-white/10 mb-6"></div>
+
+        <!-- INFOS PERSONNELLES -->
+        <div class="px-6 mb-6">
+          <h2 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-4">Informations</h2>
+          <div class="space-y-3">
+
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-gray-500 font-black uppercase tracking-widest">Âge</span>
+              <span class="text-xs font-bold text-white">{{ getAge(profil.date_birth) }} ans</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-gray-500 font-black uppercase tracking-widest">Sexe</span>
+              <span class="text-xs font-bold text-white">{{ profil.sexe }}</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-gray-500 font-black uppercase tracking-widest">Statut</span>
+              <span class="text-xs font-bold text-white">{{ profil.status }}</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-gray-500 font-black uppercase tracking-widest">Nationalité</span>
+              <span class="text-xs font-bold text-white">{{ profil.nationalite }}</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="text-xs text-gray-500 font-black uppercase tracking-widest">Naissance</span>
+              <span class="text-xs font-bold text-white">{{ profil.date_birth | date:'dd/MM/yyyy' }}</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- SEPARATEUR -->
+        <div class="mx-6 border-t border-white/10 mb-6"></div>
+
+        <!-- LANGUES -->
+        <div class="px-6 mb-6" *ngIf="profil.langues && profil.langues.length">
+          <h2 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-4">🌍 Langues</h2>
+          <div class="space-y-4">
+            <div *ngFor="let langue of profil.langues">
+              <div class="flex justify-between items-center mb-1.5">
+                <span class="text-xs font-black text-white">{{ langue.nom_langue }}</span>
+                <span class="text-[10px] text-blue-400 font-black uppercase">{{ langue.niveau }}</span>
+              </div>
+              <div class="w-full bg-white/10 rounded-full h-1.5 overflow-hidden">
+                <div class="bg-gradient-to-r from-blue-500 to-blue-400 h-1.5 rounded-full transition-all duration-700"
+                     [style.width]="getNiveauWidth(langue.niveau)">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEPARATEUR -->
+        <div class="mx-6 border-t border-white/10 mb-6" *ngIf="profil.qualites && profil.qualites.length"></div>
+
+        <!-- QUALITES -->
+        <div class="px-6 mb-6" *ngIf="profil.qualites && profil.qualites.length">
+          <h2 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-4">⭐ Qualités</h2>
+          <div class="flex flex-wrap gap-2">
+            <span *ngFor="let qualite of profil.qualites"
+                  class="px-3 py-1.5 bg-white/5 border border-white/10 text-gray-300 text-[10px] font-black rounded-xl uppercase tracking-wide">
+              {{ qualite.nom_qualite }}
+            </span>
+          </div>
+        </div>
+
+        <!-- SEPARATEUR -->
+        <div class="mx-6 border-t border-white/10 mb-6" *ngIf="profil.loisirs && profil.loisirs.length"></div>
+
+        <!-- LOISIRS -->
+        <div class="px-6 pb-8" *ngIf="profil.loisirs && profil.loisirs.length">
+          <h2 class="text-[10px] font-black uppercase tracking-[0.2em] text-gray-500 mb-4">🎮 Loisirs</h2>
+          <div class="flex flex-wrap gap-2">
+            <span *ngFor="let loisir of profil.loisirs"
+                  class="px-3 py-1.5 bg-white/5 border border-white/10 text-gray-300 text-[10px] font-black rounded-xl uppercase tracking-wide">
+              {{ loisir.nom_loisirs }}
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ========== CONTENU DROITE ========== -->
+      <div class="flex-1 bg-gray-50 flex flex-col">
+
+        <!-- HEADER DROITE -->
+        <div class="bg-white border-b border-gray-100 p-8">
+          <div *ngIf="profil.desc">
+            <div class="flex items-center space-x-3 mb-3">
+              <div class="w-10 h-1 bg-blue-600 rounded-full"></div>
+              <h2 class="text-sm font-black text-gray-400 uppercase tracking-widest">Profil</h2>
+            </div>
+            <p class="text-gray-600 leading-relaxed font-medium text-base">{{ profil.desc }}</p>
+          </div>
+        </div>
+
+        <div class="p-8 space-y-8 flex-1">
+
+          <!-- EXPERIENCES -->
+          <div *ngIf="profil.experiences && profil.experiences.length">
+            <div class="flex items-center space-x-3 mb-5">
+              <div class="w-10 h-1 bg-purple-600 rounded-full"></div>
+              <h2 class="text-sm font-black text-gray-400 uppercase tracking-widest">Expériences professionnelles</h2>
+            </div>
+            <div class="space-y-3">
+              <div *ngFor="let exp of profil.experiences; let i = index"
+                   class="relative pl-8">
+                <!-- TIMELINE DOT -->
+                <div class="absolute left-0 top-3 flex items-center flex-col">
+                  <div class="w-4 h-4 rounded-full border-2 border-purple-600 flex items-center justify-center"
+                       [class.bg-purple-600]="i === 0"
+                       [class.bg-white]="i !== 0">
+                    <div *ngIf="i === 0" class="w-1.5 h-1.5 bg-white rounded-full"></div>
+                  </div>
+                  <div *ngIf="i < profil.experiences.length - 1" class="w-0.5 h-full bg-purple-200 mt-1 min-h-8"></div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:border-purple-200 transition-all">
+                  <div class="flex justify-between items-start mb-2">
+                    <h3 class="font-black text-gray-900 text-base">{{ exp.poste }}</h3>
+                    <span class="flex-shrink-0 ml-3 px-3 py-1 bg-purple-50 text-purple-700 text-[10px] font-black rounded-full border border-purple-100 uppercase tracking-wide">
+                      {{ exp.date_exp | date:'yyyy' }}
+                    </span>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <svg class="w-3.5 h-3.5 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    </svg>
+                    <p class="text-purple-600 font-bold text-sm">{{ exp.adress_exp }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ETUDES -->
+          <div *ngIf="profil.etudes && profil.etudes.length">
+            <div class="flex items-center space-x-3 mb-5">
+              <div class="w-10 h-1 bg-emerald-600 rounded-full"></div>
+              <h2 class="text-sm font-black text-gray-400 uppercase tracking-widest">Formation académique</h2>
+            </div>
+            <div class="space-y-3">
+              <div *ngFor="let etude of profil.etudes; let i = index"
+                   class="relative pl-8">
+                <div class="absolute left-0 top-3 flex items-center flex-col">
+                  <div class="w-4 h-4 rounded-full border-2 border-emerald-600 flex items-center justify-center"
+                       [class.bg-emerald-600]="i === 0"
+                       [class.bg-white]="i !== 0">
+                    <div *ngIf="i === 0" class="w-1.5 h-1.5 bg-white rounded-full"></div>
+                  </div>
+                  <div *ngIf="i < profil.etudes.length - 1" class="w-0.5 h-full bg-emerald-200 mt-1 min-h-8"></div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 hover:border-emerald-200 transition-all">
+                  <div class="flex justify-between items-start mb-2">
+                    <h3 class="font-black text-gray-900 text-base">{{ etude.etude }}</h3>
+                    <span class="flex-shrink-0 ml-3 px-3 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-black rounded-full border border-emerald-100 uppercase tracking-wide">
+                      {{ etude.date_et | date:'yyyy' }}
+                    </span>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <svg class="w-3.5 h-3.5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/>
+                    </svg>
+                    <p class="text-emerald-600 font-bold text-sm">{{ etude.adresse_et }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- COMPETENCES -->
+          <div *ngIf="profil.competences && profil.competences.length">
+            <div class="flex items-center space-x-3 mb-5">
+              <div class="w-10 h-1 bg-indigo-600 rounded-full"></div>
+              <h2 class="text-sm font-black text-gray-400 uppercase tracking-widest">Compétences techniques</h2>
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+              <div *ngFor="let comp of profil.competences; let i = index"
+                   class="flex items-center space-x-3 bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:border-indigo-200 transition-all">
+                <div class="w-9 h-9 rounded-xl flex items-center justify-center font-black text-sm text-white flex-shrink-0"
+                     [class.bg-indigo-600]="i % 4 === 0"
+                     [class.bg-blue-600]="i % 4 === 1"
+                     [class.bg-purple-600]="i % 4 === 2"
+                     [class.bg-violet-600]="i % 4 === 3">
+                  {{ comp.nom_comp.charAt(0).toUpperCase() }}
+                </div>
+                <span class="font-bold text-gray-900 text-sm">{{ comp.nom_comp }}</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- FOOTER CV -->
+        <div class="bg-white border-t border-gray-100 px-8 py-5">
+          <div class="flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+              <div class="w-5 h-5 bg-gray-900 rounded flex items-center justify-center">
+                <span class="text-[8px] font-black text-white">CV</span>
+              </div>
+              <span class="text-xs text-gray-400 font-bold">CV App — {{ profil.prenom }} {{ profil.nom }}</span>
+            </div>
+            <span class="text-xs text-gray-400">{{ profil.email }}</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
